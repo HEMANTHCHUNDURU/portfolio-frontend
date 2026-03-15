@@ -1,0 +1,1917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hemanth Chunduru — AI Systems Engineer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --canvas: #0B0F19;
+      --surface: #10141f;
+      --border: #1a2130;
+      --border-hover: #263042;
+      --muted: #3d4f66;
+      --subtle: #5c6b7d;
+      --body: #8a95a8;
+      --heading: #edf2f9;
+      --font-sans: 'DM Sans', system-ui, sans-serif;
+      --font-mono: 'DM Mono', monospace;
+    }
+    html { scroll-behavior: smooth; }
+
+    /* SCROLL PROGRESS */
+    #scroll-progress {
+      position: fixed;
+      top: 0; left: 0;
+      width: 0%;
+      height: 2px;
+      background: rgba(237,242,249,0.15);
+      z-index: 100;
+      transition: width 0.08s linear;
+      pointer-events: none; /* FIX #13: was 'auto', doesn't need to intercept clicks */
+    }
+
+    /* PAGE FADE IN */
+    @keyframes pageFade {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* FIX #4: Theme system — use CSS classes, not inline style.background */
+    body {
+      background: var(--canvas);
+      transition: background 0.8s ease, color 0.8s ease;
+      color: var(--body);
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
+    }
+
+    /* LIGHT MODE — all text must be clearly visible on white/light bg */
+    body.light {
+      --canvas: #f0f4f8;
+      --surface: #ffffff;
+      --heading: #0f172a;       /* near-black, all headings */
+      --body: #1e293b;          /* dark slate, body copy */
+      --subtle: #334155;        /* medium-dark for secondary text */
+      --muted: #475569;         /* visible on light bg (was too pale) */
+      --border: #cbd5e1;
+      --border-hover: #94a3b8;  /* clearly visible border accent */
+    }
+    /* Extra overrides for elements that use hardcoded dark colours in light mode */
+    body.light h1.hero-name { color: #0f172a; }
+    body.light .exp-period,
+    body.light .exp-org,
+    body.light .project-idx,
+    body.light .project-domain,
+    body.light .stack-detail,
+    body.light .section-label,
+    body.light .askme-msg-role,
+    body.light .status-label,
+    body.light .hero-role,
+    body.light .focus-label,
+    body.light .philosophy-label,
+    body.light .contact-label,
+    body.light .askme-footer-note,
+    body.light .footer-copy,
+    body.light .footer-links a { color: #475569; }
+    body.light .exp-duties li::before,
+    body.light .focus-list li::before { color: #64748b; }
+    body.light .philosophy-line.dim { color: #64748b; }
+    body.light .tag { color: #334155; border-color: #94a3b8; }
+    body.light .btn-primary { background: #0f172a; color: #f8fafc; }
+    body.light .btn-primary:hover { background: #1e293b; }
+    body.light .btn-secondary { color: #334155; border-color: #94a3b8; }
+    body.light .nav-links a { color: #334155; }
+    body.light .nav-links a:hover,
+    body.light .nav-links a.active { color: #0f172a; }
+    body.light .nav-logo { color: #0f172a; }
+    body.light .askme-msg.user .askme-msg-body { color: #0f172a; }
+    body.light .askme-msg-body { color: #334155; }
+    body.light .contact-value { color: #0f172a; }
+    body.light #scroll-progress { background: rgba(15,23,42,0.15); }
+    body.light nav { border-bottom-color: #cbd5e1; }
+    body.light .askme-suggestion { color: #334155; border-color: #cbd5e1; }
+    body.light .askme-suggestion:hover { color: #0f172a; border-color: #94a3b8; }
+    body.light .askme-send { background: #0f172a; color: #f8fafc; }
+    body.light .askme-send:hover { background: #1e293b; }
+
+    body.dark {
+      --canvas: #0B0F19;
+      --surface: #10141f;
+      --border: #1a2130;
+      --border-hover: #263042;
+      --muted: #3d4f66;
+      --subtle: #5c6b7d;
+      --body: #8a95a8;
+      --heading: #edf2f9;
+    }
+
+    /* ═══════════════════════════════════════════════════════════════
+       EARTH MODE — sky canvas shows through; all text guaranteed legible
+       ═══════════════════════════════════════════════════════════════ */
+    body.earth {
+      --canvas: transparent;
+      --heading:      #ffffff;
+      --body:         #e8edf5;
+      --subtle:       #cdd5e0;
+      --muted:        #99a8bc;
+      --border:       rgba(255,255,255,0.14);
+      --border-hover: rgba(255,255,255,0.30);
+      --surface:      rgba(8,12,24,0.72);
+    }
+
+    /* Frosted dark glass backdrop on every section so text pops against any sky */
+    body.earth section,
+    body.earth footer {
+      position: relative;
+      z-index: 5;
+    }
+    body.earth section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(4,8,18,0.52);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* ── NAV: glassmorphism — adapts colour via .sky-* class on body ── */
+    body.earth nav {
+      background:      rgba(5,9,20,0.68);
+      backdrop-filter: blur(22px) saturate(180%);
+      -webkit-backdrop-filter: blur(22px) saturate(180%);
+      border-bottom:   1px solid rgba(255,255,255,0.10);
+      box-shadow:      0 1px 0 rgba(255,255,255,0.04), 0 8px 32px rgba(0,0,0,0.35);
+      transition: background 1.2s ease, border-color 1.2s ease, box-shadow 1.2s ease;
+    }
+    /* Sky-phase tint injected by JS via CSS variable on nav */
+    body.earth nav::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--sky-tint, transparent);
+      pointer-events: none;
+      transition: background 1.5s ease;
+    }
+    /* Nav text always white in earth mode */
+    body.earth .nav-logo               { color: #ffffff; }
+    body.earth .nav-links a            { color: rgba(255,255,255,0.60); }
+    body.earth .nav-links a:hover,
+    body.earth .nav-links a.active     { color: #ffffff; }
+    body.earth .nav-search input       { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.15); color: #ffffff; }
+    body.earth .nav-search input::placeholder { color: rgba(255,255,255,0.30); }
+    body.earth .nav-search svg         { stroke: rgba(255,255,255,0.4); }
+
+    /* ── All content text white / near-white in earth mode ── */
+    body.earth h1.hero-name            { color: #ffffff; text-shadow: 0 2px 24px rgba(0,0,0,0.55); }
+    body.earth .hero-role              { color: rgba(255,255,255,0.52); }
+    body.earth .hero-subtitle          { color: rgba(255,255,255,0.78); }
+    body.earth .status-label           { color: rgba(255,255,255,0.48); }
+    body.earth .section-label          { color: #ffffff; }
+    body.earth .exp-period,
+    body.earth .exp-org,
+    body.earth .project-idx,
+    body.earth .project-domain,
+    body.earth .stack-detail,
+    body.earth .focus-label,
+    body.earth .philosophy-label,
+    body.earth .contact-label,
+    body.earth .exp-transition-label   { color: rgba(255,255,255,0.42); }
+    body.earth .exp-role               { color: #ffffff; }
+    body.earth .exp-duties li          { color: rgba(255,255,255,0.74); }
+    body.earth .exp-duties li::before,
+    body.earth .focus-list li::before  { color: rgba(255,255,255,0.28); }
+    body.earth .exp-transition-body    { color: rgba(255,255,255,0.72); }
+    body.earth .project-title          { color: #ffffff; }
+    body.earth .project-desc           { color: rgba(255,255,255,0.72); }
+    body.earth .tag                    { color: rgba(255,255,255,0.55); border-color: rgba(255,255,255,0.16); }
+    body.earth .philosophy-line        { color: #ffffff; }
+    body.earth .philosophy-line.dim    { color: rgba(255,255,255,0.42); }
+    body.earth .philosophy-body        { color: rgba(255,255,255,0.70); }
+    body.earth .stack-name             { color: #ffffff; }
+    body.earth .stack-icon             { opacity: 0.65; }
+    body.earth .stack-icon svg         { fill: #ffffff; }
+    body.earth .stack-item             { background: rgba(8,14,28,0.55); border-color: rgba(255,255,255,0.10); }
+    body.earth .focus-list li          { color: rgba(255,255,255,0.72); }
+    body.earth .askme-left-title       { color: #ffffff; }
+    body.earth .askme-left-desc        { color: rgba(255,255,255,0.68); }
+    body.earth .askme-suggestion       { color: rgba(255,255,255,0.55); border-color: rgba(255,255,255,0.13); background: rgba(255,255,255,0.04); }
+    body.earth .askme-suggestion:hover { color: #ffffff; border-color: rgba(255,255,255,0.35); background: rgba(255,255,255,0.08); }
+    body.earth .askme-empty-text       { color: rgba(255,255,255,0.32); }
+    body.earth .askme-msg-role         { color: rgba(255,255,255,0.32); }
+    body.earth .askme-msg.user .askme-msg-role { color: rgba(255,255,255,0.48); }
+    body.earth .askme-msg-body         { color: rgba(255,255,255,0.78); background: rgba(6,10,22,0.68); border-color: rgba(255,255,255,0.10); }
+    body.earth .askme-msg.user .askme-msg-body { color: #ffffff; background: rgba(255,255,255,0.06); }
+    body.earth .askme-footer-note      { color: rgba(255,255,255,0.32); }
+    body.earth .askme-input            { background: rgba(6,10,22,0.68); border-color: rgba(255,255,255,0.13); color: #ffffff; }
+    body.earth .askme-input::placeholder { color: rgba(255,255,255,0.28); }
+    body.earth .askme-send             { background: rgba(255,255,255,0.92); color: #07090f; }
+    body.earth .askme-send:hover       { background: #ffffff; }
+    body.earth .askme-send:disabled    { background: rgba(255,255,255,0.18); color: rgba(255,255,255,0.38); }
+    body.earth .contact-platform       { color: rgba(255,255,255,0.42); }
+    body.earth .contact-value          { color: #ffffff; }
+    body.earth .contact-arrow          { color: rgba(255,255,255,0.28); }
+    body.earth .footer-copy            { color: rgba(255,255,255,0.32); }
+    body.earth .footer-links a         { color: rgba(255,255,255,0.32); }
+    body.earth .footer-links a:hover   { color: rgba(255,255,255,0.70); }
+    body.earth .btn-primary            { background: rgba(255,255,255,0.92); color: #07090f; }
+    body.earth .btn-primary:hover      { background: #ffffff; }
+    body.earth .btn-secondary          { border-color: rgba(255,255,255,0.26); color: rgba(255,255,255,0.75); }
+    body.earth .btn-secondary:hover    { border-color: rgba(255,255,255,0.55); color: #ffffff; }
+    body.earth .search-hint            { background: rgba(6,10,22,0.92); border-color: rgba(255,255,255,0.12); }
+    body.earth .search-hint-item       { color: rgba(255,255,255,0.58); }
+    body.earth .search-hint-item:hover { color: #ffffff; }
+
+    ::selection { background: rgba(237,242,249,0.1); color: var(--heading); }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--canvas); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    a { text-decoration: none; color: inherit; }
+
+    /* NAV */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--canvas);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.8s ease;
+    }
+    .nav-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 3rem;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--heading);
+      letter-spacing: -0.01em;
+      flex-shrink: 0;
+    }
+    .nav-links { display: flex; align-items: center; gap: 2rem; }
+    .nav-links a {
+      font-size: 0.85rem;
+      color: var(--subtle);
+      transition: color 0.25s;
+      white-space: nowrap;
+    }
+    .nav-links a:hover { color: var(--heading); }
+
+    /* FIX #12: Added .active style for nav links */
+    .nav-links a.active { color: var(--heading); }
+
+    /* SEARCH */
+    .nav-search {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .nav-search input {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      color: var(--body);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      padding: 0.35rem 0.75rem 0.35rem 2rem;
+      width: 160px;
+      outline: none;
+      transition: border-color 0.2s, width 0.3s ease;
+      letter-spacing: 0.03em;
+    }
+    .nav-search input::placeholder { color: var(--muted); }
+    .nav-search input:focus {
+      border-color: var(--border-hover);
+      width: 200px;
+    }
+    .nav-search svg {
+      position: absolute;
+      left: 0.6rem;
+      width: 12px;
+      height: 12px;
+      fill: none;
+      stroke: var(--muted);
+      stroke-width: 2;
+      pointer-events: none;
+    }
+    .search-hint {
+      position: absolute;
+      top: calc(100% + 6px);
+      right: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      padding: 0.5rem 0.75rem;
+      min-width: 200px;
+      display: none;
+      z-index: 100;
+    }
+    .search-hint.visible { display: block; }
+    .search-hint-item {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--subtle);
+      padding: 0.3rem 0;
+      cursor: pointer;
+      transition: color 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .search-hint-item:hover { color: var(--heading); }
+    .search-hint-item::before {
+      content: '→';
+      color: var(--border-hover);
+      font-size: 0.6rem;
+    }
+    .search-highlight {
+      outline: 1px solid var(--border-hover);
+      outline-offset: 12px;
+      border-radius: 2px;
+      transition: outline 0.3s;
+    }
+
+    /* SITE WRAPPER */
+    .site { max-width: 1100px; margin: 0 auto; padding: 0 3rem; position: relative; z-index: 5; }
+    footer { position: relative; z-index: 5; }
+
+    /* 3D WebGL Layer */
+    #webgl-container {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      width: 420px;
+      height: 420px;
+      z-index: 90;
+      pointer-events: auto;
+      animation: floatAstronaut 6s ease-in-out infinite;
+    }
+    @keyframes floatAstronaut {
+      0%   { transform: translateY(0px) scale(var(--astro-scale,1)); }
+      50%  { transform: translateY(-12px) scale(var(--astro-scale,1)); }
+      100% { transform: translateY(0px) scale(var(--astro-scale,1)); }
+    }
+    @media(max-width:1100px) {
+      #webgl-container { display: none; }
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: 56px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 20%; left: -10%;
+      width: 55%; height: 55%;
+      background: radial-gradient(ellipse at center, rgba(100,130,180,0.045) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-inner {
+      padding: 7rem 0;
+      animation: pageFade 1s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 3rem;
+    }
+    .status-dot { position: relative; width: 8px; height: 8px; }
+    .status-dot::before {
+      content: '';
+      position: absolute; inset: 0;
+      border-radius: 50%;
+      background: #10b981;
+      opacity: 0.4;
+      animation: ping 2s cubic-bezier(0,0,0.2,1) infinite;
+    }
+    .status-dot::after {
+      content: '';
+      position: absolute; inset: 0;
+      border-radius: 50%;
+      background: #10b981;
+    }
+    @keyframes ping {
+      75%, 100% { transform: scale(2); opacity: 0; }
+    }
+    .status-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    h1.hero-name {
+      font-size: clamp(3rem, 8vw, 7rem);
+      font-weight: 300;
+      color: #f4f8ff;
+      letter-spacing: -0.04em;
+      line-height: 0.92;
+      margin-bottom: 1.5rem;
+    }
+    .hero-role {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+    }
+    .hero-divider {
+      width: 48px; height: 1px;
+      background: var(--border);
+      margin-bottom: 2rem;
+    }
+    .hero-subtitle {
+      max-width: 480px;
+      color: var(--subtle);
+      font-size: 1.1rem;
+      font-weight: 300;
+      line-height: 1.7;
+      margin-bottom: 3rem;
+    }
+    .hero-ctas { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 0.75rem 1.5rem;
+      background: var(--heading); color: var(--canvas);
+      font-size: 0.85rem; font-weight: 500;
+      border-radius: 2px;
+      transition: background 0.25s, transform 0.2s;
+    }
+    .btn-primary:hover { background: #fff; transform: translateY(-1px); }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 0.75rem 1.5rem;
+      border: 1px solid var(--border); color: var(--subtle);
+      font-size: 0.85rem; font-weight: 500;
+      border-radius: 2px;
+      transition: border-color 0.25s, color 0.25s, transform 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--muted); color: var(--body); transform: translateY(-1px); }
+
+    /* SECTION HEADER */
+    .section-header {
+      display: flex; align-items: center; gap: 1rem;
+      margin-bottom: 5rem;
+    }
+    .section-label {
+      font-size: 1.4rem; font-weight: 500;
+      color: var(--heading); letter-spacing: -0.02em;
+    }
+    .section-rule { display: none; }
+
+    /* EXPERIENCE */
+    #experience { padding: 10rem 0; border-top: 1px solid var(--border); }
+    .exp-row {
+      display: grid; grid-template-columns: 1fr 2fr; gap: 4rem;
+      padding-bottom: 4rem; margin-bottom: 4rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .exp-period {
+      font-family: var(--font-mono); font-size: 0.65rem;
+      color: var(--border-hover); letter-spacing: 0.1em;
+      text-transform: uppercase; display: block; margin-bottom: 0.75rem;
+    }
+    .exp-role {
+      font-size: 1.35rem; font-weight: 300;
+      color: var(--heading); letter-spacing: -0.02em;
+      line-height: 1.25; margin-bottom: 0.4rem;
+      cursor: pointer; /* clickable trigger */
+    }
+    .exp-org {
+      font-family: var(--font-mono); font-size: 0.7rem;
+      color: var(--muted); letter-spacing: 0.04em;
+    }
+    .exp-duties {
+      list-style: none; display: flex; flex-direction: column; gap: 0.7rem;
+    }
+    .exp-duties li {
+      font-size: 0.95rem; font-weight: 300; color: var(--subtle);
+      line-height: 1.65; padding-left: 1.25rem; position: relative;
+    }
+    .exp-duties li::before {
+      content: '—'; position: absolute; left: 0;
+      color: var(--border-hover); font-family: var(--font-mono); font-size: 0.8rem;
+    }
+    .exp-transition { display: grid; grid-template-columns: 1fr 2fr; gap: 4rem; }
+    .exp-transition-label {
+      font-family: var(--font-mono); font-size: 0.7rem;
+      color: var(--muted); letter-spacing: 0.16em;
+      text-transform: uppercase; padding-top: 0.25rem;
+    }
+    .exp-transition-body {
+      font-size: 0.95rem; font-weight: 300;
+      color: var(--subtle); line-height: 1.75; max-width: 520px;
+    }
+
+    /* WORK */
+    #work { padding: 10rem 0; border-top: 1px solid var(--border); }
+    .project {
+      display: grid; grid-template-columns: 1fr 2fr; gap: 4rem;
+      padding: 4rem 0; border-bottom: 1px solid var(--border);
+      transition: border-color 0.3s;
+    }
+    .project:hover { border-color: var(--border-hover); }
+    .project:first-of-type { border-top: 1px solid var(--border); }
+    .project-left { display: flex; flex-direction: column; justify-content: space-between; gap: 1.5rem; }
+    .project-idx { font-family: var(--font-mono); font-size: 0.7rem; color: var(--border-hover); display: block; margin-bottom: 0.75rem; }
+    .project-title {
+      font-size: 1.5rem; font-weight: 400;
+      color: var(--heading); letter-spacing: -0.025em;
+      line-height: 1.25; transition: color 0.25s, transform 0.25s;
+      display: inline-block;
+    }
+    .project:hover .project-title { color: #fff; transform: translateX(2px); }
+    .project-domain { font-family: var(--font-mono); font-size: 0.7rem; color: var(--muted); line-height: 1.6; }
+    .project-right { display: flex; flex-direction: column; justify-content: space-between; gap: 2rem; }
+    .project-desc { color: var(--subtle); font-weight: 300; font-size: 0.95rem; line-height: 1.8; }
+    .project-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag {
+      padding: 4px 12px; border: 1px solid var(--border);
+      border-radius: 2px; font-family: var(--font-mono);
+      font-size: 0.7rem; color: var(--muted);
+    }
+
+    /* PHILOSOPHY */
+    .philosophy { padding: 10rem 0; border-top: 1px solid var(--border); }
+    .philosophy-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 4rem; }
+    .philosophy-label {
+      font-family: var(--font-mono); font-size: 0.7rem;
+      color: var(--muted); letter-spacing: 0.16em;
+      text-transform: uppercase; padding-top: 0.5rem;
+    }
+    .philosophy-quote { margin-bottom: 3rem; }
+    .philosophy-line {
+      font-size: clamp(1.75rem, 4vw, 2.75rem);
+      font-weight: 300; color: var(--heading);
+      letter-spacing: -0.03em; line-height: 1.15; display: block;
+    }
+    .philosophy-line.dim { color: var(--muted); }
+    .philosophy-body { max-width: 480px; color: var(--subtle); font-weight: 300; font-size: 0.95rem; line-height: 1.75; }
+
+    /* STACK */
+    #stack { padding: 10rem 0; border-top: 1px solid var(--border); }
+    .stack-grid {
+      display: flex; overflow-x: auto; gap: 20px;
+      padding: 20px 0; scroll-snap-type: x mandatory;
+    }
+    .stack-grid::-webkit-scrollbar { height: 3px; }
+    .stack-grid::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    .stack-item {
+      min-width: 220px; flex-shrink: 0;
+      scroll-snap-align: center; transition: transform 0.4s ease, box-shadow 0.4s ease;
+      padding: 1.5rem; border: 1px solid var(--border); border-radius: 4px;
+      display: flex; gap: 1rem; align-items: flex-start;
+    }
+    .stack-item:hover {
+      transform: scale(1.08);
+      box-shadow: 0 10px 40px rgba(100,130,255,0.2);
+    }
+    .stack-icon { width: 22px; height: 22px; flex-shrink: 0; opacity: 0.4; transition: opacity 0.25s; display: flex; align-items: center; justify-content: center; }
+    .stack-item:hover .stack-icon { opacity: 0.7; }
+    .stack-icon svg { width: 22px; height: 22px; fill: var(--heading); }
+    .stack-name { font-size: 0.95rem; font-weight: 400; color: var(--heading); letter-spacing: -0.01em; display: block; transition: color 0.25s; }
+    .stack-item:hover .stack-name { color: #fff; }
+    .stack-detail { font-family: var(--font-mono); font-size: 0.65rem; color: var(--muted); margin-top: 0.2rem; display: block; }
+
+    /* CURRENT FOCUS */
+    .current-focus { padding: 7rem 0; border-top: 1px solid var(--border); }
+    .focus-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 4rem; }
+    .focus-label { font-family: var(--font-mono); font-size: 0.7rem; color: var(--muted); letter-spacing: 0.16em; text-transform: uppercase; padding-top: 0.25rem; }
+    .focus-list { list-style: none; display: flex; flex-direction: column; gap: 0.85rem; }
+    .focus-list li { font-size: 0.95rem; font-weight: 300; color: var(--subtle); line-height: 1.6; padding-left: 1.25rem; position: relative; }
+    .focus-list li::before { content: '—'; position: absolute; left: 0; color: var(--border-hover); font-family: var(--font-mono); }
+
+    /* ASK ME */
+    #askme { padding: 10rem 0; border-top: 1px solid var(--border); }
+    .askme-inner { display: grid; grid-template-columns: 1fr 2fr; gap: 5rem; }
+    .askme-left-label { font-family: var(--font-mono); font-size: 0.7rem; color: var(--muted); letter-spacing: 0.16em; text-transform: uppercase; margin-bottom: 1rem; }
+    .askme-left-title { font-size: 1.35rem; font-weight: 300; color: var(--heading); letter-spacing: -0.02em; line-height: 1.3; margin-bottom: 1rem; }
+    .askme-left-desc { font-size: 0.85rem; font-weight: 300; color: var(--subtle); line-height: 1.7; margin-bottom: 2rem; }
+    .askme-suggestions { display: flex; flex-direction: column; gap: 0.5rem; }
+    .askme-suggestion {
+      font-family: var(--font-mono); font-size: 0.65rem; color: var(--muted);
+      padding: 0.4rem 0.75rem; border: 1px solid var(--border); border-radius: 2px;
+      cursor: pointer; transition: border-color 0.15s, color 0.15s;
+      text-align: left; background: none; line-height: 1.5;
+    }
+    .askme-suggestion:hover { border-color: var(--border-hover); color: var(--body); }
+    .askme-right { display: flex; flex-direction: column; gap: 0; }
+    .askme-thread {
+      flex: 1; min-height: 300px; max-height: 500px;
+      overflow-y: auto; margin-bottom: 1.25rem;
+      display: flex; flex-direction: column; gap: 1.5rem; padding-right: 0.5rem;
+    }
+    .askme-thread::-webkit-scrollbar { width: 3px; }
+    .askme-thread::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+    .askme-empty {
+      display: flex; align-items: center; justify-content: center;
+      height: 100%; min-height: 220px;
+      border: 1px dashed var(--border); border-radius: 2px;
+    }
+    .askme-empty-text { font-family: var(--font-mono); font-size: 0.65rem; color: var(--muted); letter-spacing: 0.1em; }
+    .askme-msg { display: flex; flex-direction: column; gap: 0.3rem; }
+    .askme-msg-role { font-family: var(--font-mono); font-size: 0.6rem; color: var(--border-hover); letter-spacing: 0.12em; text-transform: uppercase; }
+    .askme-msg.user .askme-msg-role { color: var(--muted); }
+    .askme-msg-body { font-size: 0.9rem; font-weight: 300; color: var(--subtle); line-height: 1.8; padding: 1rem 1.1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 2px; }
+    .askme-msg.user .askme-msg-body { background: transparent; border-color: var(--border); color: var(--heading); }
+    .askme-msg.assistant .askme-msg-body { border-left: 2px solid var(--border-hover); }
+    .askme-typing .askme-msg-body { color: var(--muted); }
+    .typing-dots span { display: inline-block; width: 4px; height: 4px; border-radius: 50%; background: var(--muted); margin-right: 3px; animation: typingBounce 1.2s infinite ease-in-out; }
+    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typingBounce {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+      30% { transform: translateY(-4px); opacity: 1; }
+    }
+    .askme-form { display: flex; gap: 0.75rem; align-items: stretch; }
+    .askme-input {
+      flex: 1; background: var(--surface); border: 1px solid var(--border);
+      border-radius: 2px; color: var(--heading);
+      font-family: var(--font-sans); font-size: 0.9rem; font-weight: 300;
+      padding: 0.75rem 1rem; outline: none; transition: border-color 0.25s;
+      resize: none; min-height: 48px; max-height: 120px; line-height: 1.5;
+    }
+    .askme-input::placeholder { color: var(--muted); }
+    .askme-input:focus { border-color: var(--border-hover); }
+    .askme-send {
+      background: var(--heading); color: var(--canvas); border: none;
+      border-radius: 2px; font-family: var(--font-mono); font-size: 0.7rem;
+      font-weight: 400; padding: 0 1.25rem; cursor: pointer;
+      transition: background 0.25s; white-space: nowrap; flex-shrink: 0;
+    }
+    .askme-send:hover { background: #fff; }
+    .askme-send:disabled { background: var(--border-hover); color: var(--muted); cursor: not-allowed; }
+    .askme-footer-note { font-family: var(--font-mono); font-size: 0.6rem; color: var(--muted); margin-top: 0.75rem; letter-spacing: 0.04em; }
+
+    /* CONTACT */
+    #contact { padding: 7rem 0; border-top: 1px solid var(--border); }
+    .contact-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 4rem; align-items: start; }
+    .contact-label { font-family: var(--font-mono); font-size: 0.7rem; color: var(--muted); letter-spacing: 0.16em; text-transform: uppercase; padding-top: 0.25rem; }
+    .contact-links { display: flex; flex-direction: column; gap: 0; }
+    .contact-link { display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 0; border-bottom: 1px solid var(--border); transition: border-color 0.25s; gap: 2rem; }
+    .contact-link:first-child { border-top: 1px solid var(--border); }
+    .contact-link:hover { border-color: var(--border-hover); }
+    .contact-link-left { display: flex; align-items: center; gap: 1rem; }
+    .contact-platform { font-family: var(--font-mono); font-size: 0.7rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; min-width: 72px; }
+    .contact-value { font-size: 0.95rem; font-weight: 300; color: var(--heading); letter-spacing: -0.01em; transition: color 0.25s; }
+    .contact-link:hover .contact-value { color: #fff; }
+    .contact-arrow { font-family: var(--font-mono); font-size: 0.7rem; color: var(--border-hover); transition: color 0.25s, transform 0.25s; display: inline-block; }
+    .contact-link:hover .contact-arrow { color: var(--muted); transform: translateX(4px); }
+
+    /* FOOTER */
+    footer { border-top: 1px solid var(--border); padding: 2.5rem 0; }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; }
+    .footer-copy { font-family: var(--font-mono); font-size: 0.7rem; color: var(--border-hover); }
+    .footer-links { display: flex; align-items: center; gap: 1.5rem; }
+    .footer-links a { font-family: var(--font-mono); font-size: 0.7rem; color: var(--border-hover); transition: color 0.2s; }
+    .footer-links a:hover { color: var(--muted); }
+
+    /* MODEL CINEMATIC OVERLAY */
+    #model-overlay {
+      position: fixed; inset: 0;
+      background: rgba(5,8,15,0.75);
+      backdrop-filter: blur(6px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.5s ease;
+      z-index: 70;
+    }
+    #model-overlay.active { opacity: 1; pointer-events: auto; }
+    .dream-text { font-size: 2.5rem; font-weight: 300; color: #ffffff; letter-spacing: -0.02em; margin-bottom: 1rem; }
+    .dream-sub { font-family: var(--font-mono); font-size: 0.9rem; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase; }
+
+    /* ASTRONAUT PROMPT BUBBLE */
+    #astronaut-bubble {
+      position: fixed;
+      background: #0f172a; border: 1px solid #1e293b;
+      padding: 1.2rem 1.5rem; border-radius: 14px;
+      color: #fff; font-size: 0.9rem;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      transform: translateY(20px);
+      z-index: 200; /* FIX: above theme-toggle */
+      max-width: 280px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+    }
+    #astronaut-bubble.active { opacity: 1; pointer-events: auto; transform: translateY(0); }
+    .bubble-title { font-weight: 500; margin-bottom: 0.5rem; }
+    .bubble-text { font-size: 0.85rem; color: #9ca3af; margin-bottom: 1rem; line-height: 1.4; }
+    .bubble-actions { display: flex; gap: 0.5rem; }
+    .bubble-primary { flex: 1; background: #ffffff; color: #000; border: none; padding: 0.5rem; border-radius: 6px; font-size: 0.75rem; cursor: pointer; }
+    .bubble-secondary { flex: 1; background: transparent; color: #9ca3af; border: 1px solid #334155; padding: 0.5rem; border-radius: 6px; font-size: 0.75rem; cursor: pointer; }
+    .bubble-primary:hover { background: #f1f5f9; }
+    .bubble-secondary:hover { border-color: #475569; color: #fff; }
+    .close-btn { position: absolute; top: 0.6rem; right: 0.75rem; cursor: pointer; font-size: 0.75rem; color: #9ca3af; background: none; border: none; line-height: 1; }
+    .close-btn:hover { color: #fff; }
+
+    /* DIM BACKGROUND */
+    body.dimmed::before {
+      content: ''; position: fixed; inset: 0;
+      background: rgba(5,8,15,0.75);
+      backdrop-filter: blur(4px); z-index: 50;
+    }
+    .dimmed nav { opacity: 0.15; transition: opacity 0.5s ease; }
+
+    /* LOCATION OVERLAY */
+    #location-overlay {
+      position: fixed; inset: 0;
+      background: rgba(5,8,15,0.85);
+      backdrop-filter: blur(10px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.6s ease; z-index: 1000;
+    }
+    #astronaut-wrapper {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  width: 420px;
+  height: 420px;
+  z-index: 90;
+}
+
+#webgl-container {
+  position: absolute;
+  inset: 0;
+  animation: floatAstronaut 6s ease-in-out infinite;
+}
+
+#astronaut-bubble {
+  position: absolute;
+  bottom: 110px;
+  right: 60px;
+}
+#astronaut-bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  right: 30px;
+  width: 14px;
+  height: 14px;
+  background: #0f172a;
+  border-right: 1px solid #1e293b;
+  border-bottom: 1px solid #1e293b;
+  transform: rotate(45deg);
+}
+    #location-overlay.active { opacity: 1; pointer-events: auto; }
+    .location-card { background: #0f172a; border: 1px solid #1e293b; padding: 2rem; border-radius: 8px; text-align: center; max-width: 420px; animation: fadeUp 0.8s ease forwards; }
+    .location-card h2 { color: #fff; font-weight: 400; margin-bottom: 1rem; }
+    .location-card img { width: 100%; opacity: 0.9; margin-bottom: 1rem; }
+    .location-card p { font-family: var(--font-mono); color: var(--muted); font-size: 0.8rem; }
+
+    #webgl-container.enlarged { --astro-scale: 1.25; }
+
+    /* THEME TOGGLE */
+    .theme-toggle {
+      position: fixed; top: 16px; right: 20px;
+      display: flex; gap: 14px; font-size: 1.2rem; z-index: 200;
+      cursor: pointer;
+    }
+    .theme-toggle span { opacity: 0.4; transition: opacity 0.3s; cursor: pointer; }
+    .theme-toggle span.active { opacity: 1; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .site { padding: 0 1.5rem; }
+      .nav-inner { padding: 0 1.5rem; }
+      .nav-search { display: none; }
+      .hero-inner { padding: 5rem 0; }
+      .exp-row { grid-template-columns: 1fr; gap: 2rem; }
+      .exp-transition { grid-template-columns: 1fr; gap: 2rem; }
+      .project { grid-template-columns: 1fr; gap: 1.5rem; }
+      .project-left { flex-direction: column; }
+      .philosophy-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .focus-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .contact-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .askme-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+      .askme-thread { max-height: 320px; }
+      .stack-grid { gap: 12px; }
+      .stack-item { min-width: 180px; padding: 1rem; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+
+<!-- VISITOR COUNTER -->
+<script>
+(function() {
+  const countEl = document.getElementById('visitor-count');
+
+  // Using CountAPI - free, no signup, persists forever
+  fetch('https://api.countapi.xyz/hit/hemanthchunduru.com/visits')
+    .then(res => res.json())
+    .then(data => {
+      // Format number nicely: 1000 → 1,000
+      countEl.textContent = data.value.toLocaleString();
+    })
+    .catch(() => {
+      // Silently fail — don't show broken counter
+      countEl.parentElement.style.display = 'none';
+    });
+})();
+</script>
+
+
+<body>
+
+<!-- EARTH MODE SKY CANVAS -->
+<canvas id="sky-canvas" style="position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0;transition:opacity 1s ease;"></canvas>
+
+<div id="scroll-progress"></div>
+<div id="astronaut-wrapper">
+  <div id="webgl-container"></div>
+
+  <div id="astronaut-bubble">
+    <button class="close-btn" aria-label="Close">✕</button>
+    <p class="bubble-title">👨‍🚀 Hey, I'm Cooper.</p>
+    <p class="bubble-text">You can know about Hemanth in one go,<br/>or you can explore.</p>
+    <div class="bubble-actions">
+      <button id="explore-btn" class="bubble-secondary">Explore</button>
+      <button id="know-btn" class="bubble-primary">Know in one go</button>
+    </div>
+  </div>
+</div>
+
+<div id="model-overlay">
+  <div class="model-message">
+    <p class="dream-text">Dreaming...</p>
+    <p class="dream-sub">Want to know more about me?</p>
+  </div>
+</div>
+
+<div id="location-overlay">
+  <div class="location-card">
+    <h2>Hyderabad, Telangana</h2>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Telangana_districts_map.svg/512px-Telangana_districts_map.svg.png" alt="Telangana Map" />
+    <p>Former Product Analyst Role</p>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <span class="nav-logo">HC</span>
+    <div class="nav-links">
+      <a href="#experience">Experience</a>
+      <a href="#work">Work</a>
+      <a href="#stack">Stack</a>
+      <a href="#askme">Ask Me</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <!-- Theme toggle moved here so it doesn't overlap nav; kept fixed for visibility -->
+    <div class="theme-toggle" id="themeToggle">
+      <span id="sun" title="Light mode">☀️</span>
+      <span id="moon" title="Dark mode">🌙</span>
+      <span id="earth" title="Auto mode">🌍</span>
+    </div>
+    <div class="nav-search">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="siteSearch" placeholder="Search sections..." autocomplete="off" spellcheck="false" />
+      <div class="search-hint" id="searchHint"></div>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="site">
+    <div class="hero-inner">
+      <div class="status">
+        <span class="status-dot"></span>
+        <span class="status-label">Available for opportunities</span>
+      </div>
+      <h1 class="hero-name">Hemanth Chunduru</h1>
+      <p class="hero-role">AI Systems Engineer</p>
+      <div class="hero-divider"></div>
+      <p class="hero-subtitle">
+        Designing LLM systems with architectural depth—retrieval pipelines, evaluation infrastructure, and latency-aware backends built to operate reliably at scale.
+      </p>
+      <div class="hero-ctas">
+        <a href="#work" class="btn-primary">View Work <span>↓</span></a>
+        <a href="resume.pdf" target="_blank" rel="noopener" class="btn-secondary">Download Resume ↗</a>
+        <a href="https://github.com/CHUNDURUHEMANTH" target="_blank" rel="noopener" class="btn-secondary">GitHub ↗</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="site">
+    <div class="section-header">
+      <span class="section-label">Experience</span>
+    </div>
+    <div class="exp-row">
+      <div class="exp-left">
+        <span class="exp-period">Prior Role</span>
+        <h3 class="exp-role" id="expRoleClick">Product Analyst</h3>
+        <span class="exp-org">Enterprise Software Environment</span>
+      </div>
+      <div class="exp-right">
+        <ul class="exp-duties">
+          <li>Gathered and formalized product requirements across engineering, operations, and business stakeholders—translating ambiguous inputs into structured specifications.</li>
+          <li>Identified process bottlenecks and redesigned workflows to reduce manual overhead, using data to validate before and after states.</li>
+          <li>Acted as a liaison between technical teams and business owners, maintaining alignment on scope, priorities, and delivery timelines.</li>
+          <li>Produced system documentation, decision logs, and analytical reports used to inform product direction and resource allocation.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="exp-transition">
+      <div>
+        <p class="exp-transition-label">Transition</p>
+      </div>
+      <div>
+        <p class="exp-transition-body">
+          Working inside product systems made the gaps obvious—decisions were made without reliable data pipelines, tooling was brittle, and no one had a clear model of how information moved through the organization. That led to a deliberate move toward the technical layer: learning how systems are actually built, how data is retrieved, and how models can be integrated without creating new fragility. The shift from product to engineering wasn't a pivot—it was a depth increase on the same underlying problem.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WORK -->
+<!-- WORK -->
+<!-- WORK -->
+<section id="work">
+  <div class="site">
+    <div class="section-header">
+      <span class="section-label">Selected Work</span>
+    </div>
+
+    <!-- Project 01 -->
+    <article class="project">
+      <div class="project-left">
+        <div>
+          <span class="project-idx">01</span>
+          <h3 class="project-title">Company Knowledge Base RAG System</h3>
+        </div>
+        <p class="project-domain">RAG · Semantic Search · Embeddings · Evaluation</p>
+        <div style="display:flex; gap: 0.75rem; margin-top: 1.5rem; flex-wrap: wrap;">
+          <a href="https://github.com/HEMANTHCHUNDURU/company-kb-rag"
+             target="_blank" rel="noopener"
+             class="btn-secondary"
+             style="font-size:0.75rem; padding: 0.5rem 1rem;">
+            GitHub ↗
+          </a>
+        </div>
+      </div>
+      <div class="project-right">
+        <p class="project-desc">
+          Built an AI-powered chatbot that lets employees instantly query internal 
+          company documents — HR policies, onboarding guides, and SOPs — using natural 
+          language. PDFs are chunked, embedded into a FAISS vector store, and the top 
+          matching context is passed to GPT-4o, which generates grounded answers with 
+          source citations. Designed to fail honestly — if the answer isn't in the 
+          knowledge base, it says so rather than hallucinating. Evaluated using Ragas 
+          with a faithfulness score of 0.91.
+        </p>
+        <div style="display:flex; gap: 0.75rem; margin-top: 1rem; flex-wrap: wrap;">
+          <div style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.2); border-radius: 8px; padding: 10px 16px; font-size: 12px;">
+            <span style="color:#10b981; font-weight:600;">0.91</span>
+            <span style="color:#475569; margin-left:6px;">Faithfulness Score</span>
+          </div>
+          <div style="background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); border-radius: 8px; padding: 10px 16px; font-size: 12px;">
+            <span style="color:#3b82f6; font-weight:600;">~2.3s</span>
+            <span style="color:#475569; margin-left:6px;">Avg Response Time</span>
+          </div>
+          <div style="background: rgba(139,92,246,0.1); border: 1px solid rgba(139,92,246,0.2); border-radius: 8px; padding: 10px 16px; font-size: 12px;">
+            <span style="color:#8b5cf6; font-weight:600;">Zero</span>
+            <span style="color:#475569; margin-left:6px;">Hallucinations on Context</span>
+          </div>
+        </div>
+        <div class="project-tags" style="margin-top: 1.25rem;">
+          <span class="tag">Python</span>
+          <span class="tag">LangChain</span>
+          <span class="tag">FAISS</span>
+          <span class="tag">GPT-4o</span>
+          <span class="tag">FastAPI</span>
+          <span class="tag">RAG</span>
+          <span class="tag">Ragas Evaluation</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- Project 02 -->
+    <article class="project">
+      <div class="project-left">
+        <div>
+          <span class="project-idx">02</span>
+          <h3 class="project-title">Social Sentiment Analyzer</h3>
+        </div>
+        <p class="project-domain">NLP · Sentiment Analysis · Emotion Detection · LLM</p>
+        <div style="display:flex; gap: 0.75rem; margin-top: 1.5rem; flex-wrap: wrap;">
+          <a href="https://github.com/HEMANTHCHUNDURU/social-sentiment-analyzer"
+             target="_blank" rel="noopener"
+             class="btn-secondary"
+             style="font-size:0.75rem; padding: 0.5rem 1rem;">
+            GitHub ↗
+          </a>
+        </div>
+      </div>
+      <div class="project-right">
+        <p class="project-desc">
+          Built an AI-powered dashboard that analyzes social media comments at scale. 
+          Upload a CSV export from Instagram, Twitter, or any platform — GPT-4o analyzes 
+          every comment for sentiment (positive, negative, neutral), emotion (happy, angry, 
+          sad, surprised), and a confidence score. Returns an AI-written executive summary, 
+          interactive charts, highlights for most liked and most polarizing comments, and a 
+          fully filterable per-comment table. Built for the enterprise workflow where social 
+          data is exported and analyzed in bulk.
+        </p>
+        <div style="display:flex; gap: 0.75rem; margin-top: 1rem; flex-wrap: wrap;">
+          <div style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.2); border-radius: 8px; padding: 10px 16px; font-size: 12px;">
+            <span style="color:#10b981; font-weight:600;">4 Emotions</span>
+            <span style="color:#475569; margin-left:6px;">Detected per Comment</span>
+          </div>
+          <div style="background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2); border-radius: 8px; padding: 10px 16px; font-size: 12px;">
+            <span style="color:#3b82f6; font-weight:600;">GPT-4o</span>
+            <span style="color:#475569; margin-left:6px;">Per-comment Analysis</span>
+          </div>
+          <div style="background: rgba(139,92,246,0.1); border: 1px solid rgba(139,92,246,0.2); border-radius: 8px; padding: 10px 16px; font-size: 12px;">
+            <span style="color:#8b5cf6; font-weight:600;">CSV</span>
+            <span style="color:#475569; margin-left:6px;">Enterprise Input Format</span>
+          </div>
+        </div>
+        <div class="project-tags" style="margin-top: 1.25rem;">
+          <span class="tag">Python</span>
+          <span class="tag">GPT-4o</span>
+          <span class="tag">FastAPI</span>
+          <span class="tag">Pandas</span>
+          <span class="tag">Chart.js</span>
+          <span class="tag">NLP</span>
+          <span class="tag">Sentiment Analysis</span>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- PHILOSOPHY -->
+<section class="philosophy">
+  <div class="site">
+    <div class="philosophy-grid">
+      <div><p class="philosophy-label">Engineering Philosophy</p></div>
+      <div>
+        <blockquote class="philosophy-quote">
+          <span class="philosophy-line">Most AI work ships prototypes.</span>
+          <span class="philosophy-line">I engineer the layer beneath—</span>
+          <span class="philosophy-line dim">where retrieval fails silently,<br/>latency compounds, and evaluation is the only truth.</span>
+        </blockquote>
+        <p class="philosophy-body">A model is a component. The system is the retrieval architecture, the prompt contract, the fallback behavior, the evaluation loop. Those decisions determine whether something actually works—or just demos well.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STACK -->
+<section id="stack">
+  <div class="site">
+    <div class="section-header">
+      <span class="section-label">Tech Stack</span>
+    </div>
+    <div class="stack-grid">
+
+      <div class="stack-item">
+        <div class="stack-icon">
+          <svg viewBox="0 0 24 24"><path d="M14.25.18l.9.2.73.26.59.3.45.32.34.34.25.34.16.33.1.3.04.26.02.2-.01.13V8.5l-.05.63-.13.55-.21.46-.26.38-.3.31-.33.25-.35.19-.35.14-.33.1-.3.07-.26.04-.21.02H8.77l-.69.05-.59.14-.5.22-.41.27-.33.32-.27.35-.2.36-.15.37-.1.35-.07.32-.04.27-.02.21v3.06H3.17l-.21-.03-.28-.07-.32-.12-.35-.18-.36-.26-.36-.36-.35-.46-.32-.59-.28-.73-.21-.88-.14-1.05-.05-1.23.06-1.22.16-1.04.24-.87.32-.71.36-.57.4-.44.42-.33.42-.24.4-.16.36-.1.32-.05.24-.01h.16l.06.01h8.16v-.83H6.18l-.01-2.75-.02-.37.05-.34.11-.31.17-.28.25-.26.31-.23.38-.2.44-.18.51-.15.58-.12.64-.1.71-.06.77-.04.84-.02 1.27.05 1.07.13zm-6.3 1.98l-.23.33-.08.41.08.41.23.34.33.22.41.09.41-.09.33-.22.23-.34.08-.41-.08-.41-.23-.33-.33-.22-.41-.09-.41.09-.33.22zM21.1 6.11l.28.06.32.12.35.18.36.27.36.35.35.47.32.59.28.73.21.88.14 1.04.05 1.23-.06 1.23-.16 1.04-.24.86-.32.71-.36.57-.4.45-.42.33-.42.24-.4.16-.36.09-.32.05-.24.02-.16-.01h-8.22v.82h5.84l.01 2.76.02.36-.05.34-.11.31-.17.29-.25.25-.31.24-.38.2-.44.17-.51.15-.58.13-.64.09-.71.07-.77.04-.84.01-1.27-.04-1.07-.14-.9-.2-.73-.25-.59-.3-.45-.33-.34-.34-.25-.34-.16-.33-.1-.3-.04-.25-.02-.2.01-.13v-5.34l.05-.64.13-.54.21-.46.26-.38.3-.32.33-.24.35-.2.35-.14.33-.1.3-.06.26-.04.21-.02.13-.01h5.84l.69-.05.59-.14.5-.21.41-.28.33-.32.27-.35.2-.36.15-.36.1-.35.07-.32.04-.28.02-.21V6.07h2.09l.14.04zm-6.47 14.25l-.23.33-.08.41.08.41.23.33.33.23.41.08.41-.08.33-.23.23-.33.08-.41-.08-.41-.23-.33-.33-.22-.41-.09-.41.09-.33.22z"/></svg>
+        </div>
+        <div class="stack-text">
+          <span class="stack-name">Python</span>
+          <span class="stack-detail">Backends, pipelines, data processing</span>
+        </div>
+      </div>
+
+      <div class="stack-item">
+        <div class="stack-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zm-.535 4.507a.59.59 0 0 1 .583.499l.786 4.76a.59.59 0 0 1-.49.675l-1.667.275a.59.59 0 0 1-.675-.49L9.216 5.467a.59.59 0 0 1 .49-.675l1.667-.275a.59.59 0 0 1 .092-.01zm2.844 1.661a.59.59 0 0 1 .558.392l1.614 4.529a.59.59 0 0 1-.362.752l-1.593.568a.59.59 0 0 1-.752-.362L12.16 7.518a.59.59 0 0 1 .362-.752l1.593-.568a.59.59 0 0 1 .194-.03zm-6.617.88a.59.59 0 0 1 .14.012l1.65.36a.59.59 0 0 1 .447.706L9.22 12.49a.59.59 0 0 1-.706.447l-1.65-.36a.59.59 0 0 1-.447-.706l.707-3.24a.59.59 0 0 1 .568-.583zm10.99 2.496a.59.59 0 0 1 .52.312l2.279 4.213a.59.59 0 0 1-.24.8l-1.493.807a.59.59 0 0 1-.8-.24l-2.279-4.213a.59.59 0 0 1 .24-.8l1.493-.807a.59.59 0 0 1 .28-.072zM4.19 10.88a.59.59 0 0 1 .264.063l1.488.818a.59.59 0 0 1 .233.8L4.16 16.76a.59.59 0 0 1-.8.233l-1.488-.818a.59.59 0 0 1-.233-.8l2.015-3.199a.59.59 0 0 1 .536-.296zm15.4 3.724a.59.59 0 0 1 .435.19l2.805 3.048a.59.59 0 0 1-.04.834l-1.253 1.154a.59.59 0 0 1-.834-.04l-2.805-3.048a.59.59 0 0 1 .04-.834l1.253-1.154a.59.59 0 0 1 .399-.15zm-14.147.524a.59.59 0 0 1 .397.154l1.25 1.157a.59.59 0 0 1 .037.834l-2.81 3.04a.59.59 0 0 1-.834.036l-1.25-1.157a.59.59 0 0 1-.037-.834l2.81-3.04a.59.59 0 0 1 .437-.19zm9.57 2.088a.59.59 0 0 1 .56.4l1.6 4.534a.59.59 0 0 1-.365.749l-1.594.563a.59.59 0 0 1-.749-.365l-1.6-4.534a.59.59 0 0 1 .365-.749l1.594-.563a.59.59 0 0 1 .189-.035zm-5.054.274a.59.59 0 0 1 .58.494l.774 4.764a.59.59 0 0 1-.496.672l-1.668.27a.59.59 0 0 1-.672-.496l-.774-4.764a.59.59 0 0 1 .496-.672l1.668-.27a.59.59 0 0 1 .092-.008z"/></svg>
+        </div>
+        <div class="stack-text">
+          <span class="stack-name">LangChain</span>
+          <span class="stack-detail">RAG pipelines, chains, retrieval</span>
+        </div>
+      </div>
+
+      <div class="stack-item">
+        <div class="stack-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 3.79 2 6v12c0 2.21 4.48 4 10 4s10-1.79 10-4V6c0-2.21-4.48-4-10-4zm0 2c4.41 0 8 1.34 8 3s-3.59 3-8 3-8-1.34-8-3 3.59-3 8-3zM4 9.54C5.7 10.46 8.67 11 12 11s6.3-.54 8-1.46V12c0 1.66-3.59 3-8 3s-8-1.34-8-3V9.54zm0 5C5.7 15.46 8.67 16 12 16s6.3-.54 8-1.46V17c0 1.66-3.59 3-8 3s-8-1.34-8-3v-2.46z"/></svg>
+        </div>
+        <div class="stack-text">
+          <span class="stack-name">Vector Databases</span>
+          <span class="stack-detail">FAISS · embeddings · similarity search</span>
+        </div>
+      </div>
+
+      <div class="stack-item">
+        <div class="stack-icon">
+          <svg viewBox="0 0 24 24"><path d="M22.28 9.28a5.76 5.76 0 0 0-.46-4.63 6 6 0 0 0-6.37-2.8A5.75 5.75 0 0 0 11.2 0a6 6 0 0 0-5.72 4.14 5.76 5.76 0 0 0-3.84 2.78 6 6 0 0 0 .73 7 5.75 5.75 0 0 0 .46 4.63 6 6 0 0 0 6.37 2.8A5.75 5.75 0 0 0 12.8 24a6 6 0 0 0 5.71-4.14 5.77 5.77 0 0 0 3.85-2.78 6 6 0 0 0-.08-7.8zM12.8 22.4a4.4 4.4 0 0 1-2.83-1 .23.23 0 0 1 .05-.05l4.7-2.71a.77.77 0 0 0 .39-.67v-6.63l2 1.14a.07.07 0 0 1 .04.06v5.48A4.44 4.44 0 0 1 12.8 22.4zm-9.6-4.07a4.4 4.4 0 0 1-.53-2.95l.07.04 4.7 2.71a.77.77 0 0 0 .77 0l5.74-3.31v2.27a.08.08 0 0 1-.03.06L9.2 19.87a4.44 4.44 0 0 1-6-1.54zm-1.25-9.66a4.4 4.4 0 0 1 2.3-1.93v5.56a.77.77 0 0 0 .39.67l5.73 3.31-2 1.14a.07.07 0 0 1-.07 0L4.56 14.7a4.44 4.44 0 0 1-2.61-6zm16.44 3.81L12.66 9.2l2-1.14a.07.07 0 0 1 .07 0l3.74 2.16a4.43 4.43 0 0 1-.67 8v-5.56a.77.77 0 0 0-.41-.68zm1.97-2.96l-.07-.04-4.69-2.73a.77.77 0 0 0-.77 0L9.09 10.06V7.79a.07.07 0 0 1 .03-.06l3.74-2.15a4.44 4.44 0 0 1 6.5 4.6v-.62zm-12.4 4.08-2-1.14a.07.07 0 0 1-.04-.06V6.92a4.44 4.44 0 0 1 7.28-3.4l-.05.05-4.7 2.71a.77.77 0 0 0-.39.67zm1.08-2.35 2.56-1.48 2.56 1.47v2.95l-2.56 1.48-2.56-1.48z"/></svg>
+        </div>
+        <div class="stack-text">
+          <span class="stack-name">LLM APIs</span>
+          <span class="stack-detail">GPT-4o · prompt engineering · RAG</span>
+        </div>
+      </div>
+
+      <div class="stack-item">
+        <div class="stack-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 0C5.376 0 0 5.376 0 12s5.376 12 12 12 12-5.376 12-12S18.624 0 12 0zm-.624 16.8v4.8L4.8 12.624H9.6L6.624 7.2H13.2L10.2 12h4.824z"/></svg>
+        </div>
+        <div class="stack-text">
+          <span class="stack-name">FastAPI</span>
+          <span class="stack-detail">REST APIs · async backends · routing</span>
+        </div>
+      </div>
+
+      <div class="stack-item">
+        <div class="stack-icon">
+          <svg viewBox="0 0 24 24"><path d="M7.2 0h2.4v4.8H7.2zm7.2 4.8h2.4v4.8h-2.4zM7.2 6h2.4v12H7.2zm7.2 4.8h2.4V24h-2.4zM4.8 4.8h2.4v2.4H4.8zm9.6 9.6h2.4v2.4h-2.4zM4.8 8.4h2.4v12H4.8zm9.6-6h2.4v2.4h-2.4z"/></svg>
+        </div>
+        <div class="stack-text">
+          <span class="stack-name">Pandas</span>
+          <span class="stack-detail">Data processing · CSV · NLP pipelines</span>
+        </div>
+      </div>
+
+      <div class="stack-item">
+        <div class="stack-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zm0 2a8 8 0 0 1 8 8 8 8 0 0 1-8 8 8 8 0 0 1-8-8 8 8 0 0 1 8-8zm0 2a6 6 0 1 0 0 12A6 6 0 0 0 12 6zm0 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8zm0 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/></svg>
+        </div>
+        <div class="stack-text">
+          <span class="stack-name">RAG Systems</span>
+          <span class="stack-detail">Chunking · embeddings · retrieval · eval</span>
+        </div>
+      </div>
+
+      <div class="stack-item">
+        <div class="stack-icon">
+          <svg viewBox="0 0 24 24"><path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.564-2.438L1.5 0zm7.031 9.75l-.232-2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z"/></svg>
+        </div>
+        <div class="stack-text">
+          <span class="stack-name">HTML / CSS / JS</span>
+          <span class="stack-detail">Frontend UIs · dashboards · charts</span>
+        </div>
+      </div>
+
+      <div class="stack-item">
+        <div class="stack-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+        </div>
+        <div class="stack-text">
+          <span class="stack-name">Git / GitHub</span>
+          <span class="stack-detail">Version control · project showcase</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- CURRENT FOCUS -->
+<section class="current-focus">
+  <div class="site">
+    <div class="focus-grid">
+      <div><p class="focus-label">Current Focus</p></div>
+      <ul class="focus-list">
+        <li>Improving retrieval faithfulness in multi-hop RAG pipelines through structured query decomposition and context verification layers.</li>
+        <li>Building offline evaluation frameworks that measure answer groundedness and retrieval precision before changes reach production.</li>
+        <li>Exploring agentic system design patterns where tool selection, memory, and fallback behavior are treated as architectural decisions.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ASK ME -->
+<section id="askme">
+  <div class="site">
+    <div class="section-header">
+      <span class="section-label">Ask Hemanth's AI</span>
+    </div>
+    <div class="askme-inner">
+      <div class="askme-left">
+        <p class="askme-left-title">Have a question?<br/>Ask directly.</p>
+        <p class="askme-left-desc">This assistant knows Hemanth's background, projects, technical depth, and work history. Ask anything a recruiter or collaborator might want to know.</p>
+        <div class="askme-suggestions">
+          <button class="askme-suggestion" data-q="What are the projects worked till now">Want to know more about the projects he's worked on?</button>
+          <button class="askme-suggestion" data-q="What kind of RAG systems has Hemanth built?">What RAG systems has he built?</button>
+          <button class="askme-suggestion" data-q="How did Hemanth transition from Product Analyst to AI Engineer?">How did he transition to AI engineering?</button>
+          <button class="askme-suggestion" data-q="What is Hemanth currently focused on?">What is he currently focused on?</button>
+          <button class="askme-suggestion" data-q="What makes Hemanth a strong candidate for an AI engineering role?">Why hire him for an AI role?</button>
+        </div>
+      </div>
+      <div class="askme-right">
+        <div class="askme-thread" id="askmeThread">
+          <div class="askme-empty" id="askmeEmpty">
+            <span class="askme-empty-text">Answers appear here</span>
+          </div>
+        </div>
+        <form class="askme-form">
+          <textarea class="askme-input" id="askmeInput" placeholder="Ask anything about Hemanth..." rows="1"></textarea>
+          <button type = "submit" class="askme-send" id="askmeSend">Ask →</button>
+        </form>
+        <p class="askme-footer-note">Powered by OpenAI APIs Built by Hemanth Chunduru — answers are based on Hemanth's actual background and work.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="site">
+    <div class="section-header">
+      <span class="section-label">Contact</span>
+    </div>
+    <div class="contact-grid">
+      <div><p class="contact-label">Get in touch</p></div>
+      <div class="contact-links">
+        <!-- FIX #15: mailto now matches display value -->
+        <a class="contact-link" href="mailto:chunduruhemanth2002@gmail.com">
+          <div class="contact-link-left">
+            <span class="contact-platform">Email</span>
+            <span class="contact-value">chunduruhemanth2002@gmail.com</span>
+          </div>
+          <span class="contact-arrow">↗</span>
+        </a>
+        <a class="contact-link" href="https://linkedin.com/in/hemanth-chunduru-4560bb194" target="_blank" rel="noopener">
+          <div class="contact-link-left">
+            <span class="contact-platform">LinkedIn</span>
+            <span class="contact-value">linkedin.com/in/hemanth-chunduru-4560bb194</span>
+          </div>
+          <span class="contact-arrow">↗</span>
+        </a>
+        <a class="contact-link" href="https://github.com/CHUNDURUHEMANTH" target="_blank" rel="noopener">
+          <div class="contact-link-left">
+            <span class="contact-platform">GitHub</span>
+            <span class="contact-value">github.com/CHUNDURUHEMANTH</span>
+          </div>
+          <span class="contact-arrow">↗</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="site">
+    <div class="footer-inner">
+      <span class="footer-copy">© 2026 Hemanth Chunduru</span>
+
+      <!-- VISITOR COUNTER -->
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span style="font-family:var(--font-mono); font-size:0.65rem; color:var(--muted); letter-spacing:0.08em;">
+          👁 <span id="visitor-count">...</span> visits
+        </span>
+      </div>
+
+      <div class="footer-links">
+        <a href="https://github.com/CHUNDURUHEMANTH" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://linkedin.com/in/hemanth-chunduru-4560bb194" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="mailto:chunduruhemanth2002@gmail.com">Email</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ===================== SCRIPTS ===================== -->
+
+<!-- SEARCH -->
+<script>
+(function () {
+  const input = document.getElementById('siteSearch');
+  const hint = document.getElementById('searchHint');
+  const index = [
+    { keywords: ['experience','work history','product','analyst','background','career','transition'], label: 'Experience', id: 'experience' },
+    { keywords: ['work','projects','ai','rag','resume','retrieval','governance','llm','embeddings'], label: 'Selected Work', id: 'work' },
+    { keywords: ['philosophy','engineering','approach','thinking','systems'], label: 'Engineering Philosophy', selector: '.philosophy' },
+    { keywords: ['stack','tech','python','langchain','vector','sql','next','tools','capabilities'], label: 'Tech Stack', id: 'stack' },
+    { keywords: ['focus','current','agentic','evaluation','now'], label: 'Current Focus', selector: '.current-focus' },
+    { keywords: ['contact','email','linkedin','github','reach','hire','connect'], label: 'Contact', id: 'contact' },
+    { keywords: ['about','who','hemanth','intro','hero'], label: 'Introduction', selector: '.hero' },
+  ];
+  let activeHighlight = null;
+  function clearHighlight() {
+    if (activeHighlight) { activeHighlight.classList.remove('search-highlight'); activeHighlight = null; }
+  }
+  function scrollToSection(entry) {
+    clearHighlight();
+    let target = entry.id ? document.getElementById(entry.id) : document.querySelector(entry.selector);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      target.classList.add('search-highlight');
+      activeHighlight = target;
+      setTimeout(() => clearHighlight(), 1800);
+    }
+    input.value = '';
+    hint.innerHTML = '';
+    hint.classList.remove('visible');
+  }
+  function buildHint(query) {
+    const q = query.trim().toLowerCase();
+    if (!q) { hint.innerHTML = ''; hint.classList.remove('visible'); return; }
+    const matches = index.filter(e => e.keywords.some(k => k.includes(q) || q.includes(k.slice(0, Math.max(3, q.length)))));
+    if (!matches.length) {
+      hint.innerHTML = '<div class="search-hint-item" style="cursor:default;color:var(--muted)">No match</div>';
+      hint.classList.add('visible'); return;
+    }
+    hint.innerHTML = matches.map((m, i) => `<div class="search-hint-item" data-idx="${i}">${m.label}</div>`).join('');
+    hint.classList.add('visible');
+    hint.querySelectorAll('.search-hint-item').forEach((el, i) => {
+      el.addEventListener('mousedown', e => { e.preventDefault(); scrollToSection(matches[i]); });
+    });
+  }
+  input.addEventListener('input', () => buildHint(input.value));
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      const q = input.value.trim().toLowerCase();
+      const match = index.find(entry => entry.keywords.some(k => k.includes(q) || q.includes(k.slice(0, Math.max(3, q.length)))));
+      if (match) scrollToSection(match);
+    }
+    if (e.key === 'Escape') { input.value = ''; hint.innerHTML = ''; hint.classList.remove('visible'); input.blur(); }
+  });
+  document.addEventListener('click', e => { if (!e.target.closest('.nav-search')) hint.classList.remove('visible'); });
+})();
+</script>
+
+<!-- SCROLL PROGRESS -->
+<script>
+(function () {
+  const bar = document.getElementById('scroll-progress');
+  function update() {
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (docHeight > 0 ? (window.scrollY / docHeight) * 100 : 0) + '%';
+  }
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+})();
+</script>
+
+<!-- ACTIVE NAV LINKS -->
+<script>
+(function () {
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => { if (window.pageYOffset >= s.offsetTop - 100) current = s.getAttribute('id'); });
+    navLinks.forEach(a => {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+    });
+  }, { passive: true });
+})();
+</script>
+
+<!-- THEME TOGGLE + EARTH SKY CANVAS -->
+<script>
+(function () {
+  const sun   = document.getElementById('sun');
+  const moon  = document.getElementById('moon');
+  const earth = document.getElementById('earth');
+  const canvas = document.getElementById('sky-canvas');
+  const ctx = canvas.getContext('2d');
+
+  // ── Stars pool ──────────────────────────────────────────────────────────────
+  const STAR_COUNT = 220;
+  const stars = Array.from({ length: STAR_COUNT }, () => ({
+    x: Math.random(),
+    y: Math.random() * 0.75,
+    r: Math.random() * 1.4 + 0.3,
+    twinkle: Math.random() * Math.PI * 2,
+    speed: Math.random() * 0.03 + 0.01
+  }));
+
+  // Shooting stars
+  const shooters = [];
+  function spawnShooter() {
+    shooters.push({ x: Math.random() * 0.8 + 0.1, y: Math.random() * 0.3, len: 0, maxLen: Math.random() * 0.12 + 0.06, speed: 0.004 + Math.random() * 0.003, angle: Math.PI / 4 + (Math.random() - 0.5) * 0.3, alpha: 1 });
+  }
+
+  let rafId = null;
+  let currentMode = 'dark';
+  let skyActive = false;
+
+  function resizeCanvas() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas, { passive: true });
+
+  // ── Sky colour palette by hour ──────────────────────────────────────────────
+  function getSkyConfig(hour) {
+    // 0-4 : deep night
+    if (hour >= 0  && hour < 5)  return { phase: 'night',   top: '#020408', bot: '#060c18', showMoon: true,  moonPhase: 0.7, starAlpha: 1.0, horizonGlow: null };
+    // 5-6 : pre-dawn
+    if (hour >= 5  && hour < 6)  return { phase: 'predawn', top: '#0d0a1e', bot: '#3d1f2e', showMoon: true,  moonPhase: 0.4, starAlpha: 0.5, horizonGlow: { color: '#ff6a3d', spread: 0.18 } };
+    // 6-8 : sunrise
+    if (hour >= 6  && hour < 8)  return { phase: 'sunrise', top: '#1a1040', bot: '#f97316', showMoon: false, moonPhase: 0,   starAlpha: 0.0, horizonGlow: { color: '#fbbf24', spread: 0.32 } };
+    // 8-11: morning
+    if (hour >= 8  && hour < 11) return { phase: 'morning', top: '#87ceeb', bot: '#e0f6ff', showMoon: false, moonPhase: 0,   starAlpha: 0.0, horizonGlow: null };
+    // 11-15: noon
+    if (hour >= 11 && hour < 15) return { phase: 'noon',    top: '#2196f3', bot: '#bbdefb', showMoon: false, moonPhase: 0,   starAlpha: 0.0, horizonGlow: null };
+    // 15-17: afternoon
+    if (hour >= 15 && hour < 17) return { phase: 'afternoon', top: '#1565c0', bot: '#90caf9', showMoon: false, moonPhase: 0, starAlpha: 0.0, horizonGlow: null };
+    // 17-19: sunset
+    if (hour >= 17 && hour < 19) return { phase: 'sunset',  top: '#1a1040', bot: '#f97316', showMoon: false, moonPhase: 0,   starAlpha: 0.0, horizonGlow: { color: '#f59e0b', spread: 0.35 } };
+    // 19-21: dusk
+    if (hour >= 19 && hour < 21) return { phase: 'dusk',    top: '#0d0625', bot: '#6b21a8', showMoon: true,  moonPhase: 0.3, starAlpha: 0.4, horizonGlow: { color: '#c026d3', spread: 0.2 } };
+    // 21-24: night
+    return                               { phase: 'night',   top: '#020408', bot: '#060c18', showMoon: true,  moonPhase: 0.8, starAlpha: 1.0, horizonGlow: null };
+  }
+
+  let t = 0;
+
+  function drawSky() {
+    if (!skyActive) { rafId = null; return; }
+    rafId = requestAnimationFrame(drawSky);
+    t += 0.012;
+
+    const W = canvas.width, H = canvas.height;
+    const hour = new Date().getHours() + new Date().getMinutes() / 60;
+    const cfg  = getSkyConfig(Math.floor(hour));
+
+    ctx.clearRect(0, 0, W, H);
+
+    // ── Gradient background ───────────────────────────────────────────────────
+    const grad = ctx.createLinearGradient(0, 0, 0, H);
+    grad.addColorStop(0,   cfg.top);
+    grad.addColorStop(1,   cfg.bot);
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, H);
+
+    // ── Horizon glow (sunrise / sunset / dusk) ────────────────────────────────
+    if (cfg.horizonGlow) {
+      const hg = ctx.createRadialGradient(W * 0.5, H, 0, W * 0.5, H, W * cfg.horizonGlow.spread * 3);
+      hg.addColorStop(0, cfg.horizonGlow.color + 'cc');
+      hg.addColorStop(1, 'transparent');
+      ctx.fillStyle = hg;
+      ctx.fillRect(0, 0, W, H);
+    }
+
+    // ── Stars ─────────────────────────────────────────────────────────────────
+    if (cfg.starAlpha > 0) {
+      stars.forEach(s => {
+        s.twinkle += s.speed;
+        const alpha = cfg.starAlpha * (0.6 + 0.4 * Math.sin(s.twinkle));
+        ctx.beginPath();
+        ctx.arc(s.x * W, s.y * H, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+        ctx.fill();
+      });
+
+      // Shooting stars (night only)
+      if (cfg.starAlpha === 1.0) {
+        if (Math.random() < 0.003) spawnShooter();
+        for (let i = shooters.length - 1; i >= 0; i--) {
+          const s = shooters[i];
+          s.len += s.speed;
+          s.alpha -= 0.012;
+          if (s.alpha <= 0 || s.len >= s.maxLen) { shooters.splice(i, 1); continue; }
+          const x1 = s.x * W, y1 = s.y * H;
+          const dx = Math.cos(s.angle) * s.len * W;
+          const dy = Math.sin(s.angle) * s.len * H;
+          const sg = ctx.createLinearGradient(x1, y1, x1 + dx, y1 + dy);
+          sg.addColorStop(0, `rgba(255,255,255,${s.alpha})`);
+          sg.addColorStop(1, 'transparent');
+          ctx.beginPath();
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(x1 + dx, y1 + dy);
+          ctx.strokeStyle = sg;
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+        }
+      }
+    }
+
+    // ── Moon ──────────────────────────────────────────────────────────────────
+    if (cfg.showMoon) {
+      const mx = W * 0.78, my = H * 0.16;
+      const mr = 38;
+      // Moon glow
+      const mg = ctx.createRadialGradient(mx, my, mr * 0.5, mx, my, mr * 3.5);
+      mg.addColorStop(0, 'rgba(200,220,255,0.18)');
+      mg.addColorStop(1, 'transparent');
+      ctx.fillStyle = mg;
+      ctx.fillRect(0, 0, W, H);
+      // Moon body
+      ctx.beginPath();
+      ctx.arc(mx, my, mr, 0, Math.PI * 2);
+      ctx.fillStyle = '#dde8f8';
+      ctx.fill();
+      // Crescent shadow (phase)
+      if (cfg.moonPhase > 0) {
+        ctx.beginPath();
+        ctx.arc(mx + mr * cfg.moonPhase * 0.9, my, mr * 0.88, 0, Math.PI * 2);
+        ctx.fillStyle = ctx.createLinearGradient(0, 0, 0, H).addColorStop === undefined ? '#020408' : cfg.top;
+        // Use matching sky top colour for crescent cut
+        ctx.fillStyle = cfg.top;
+        ctx.fill();
+      }
+      // Moon craters
+      [[0.3, -0.2, 5], [-0.25, 0.3, 7], [0.1, 0.4, 4]].forEach(([cx, cy, cr]) => {
+        ctx.beginPath();
+        ctx.arc(mx + cx * mr, my + cy * mr, cr, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(160,185,220,0.35)';
+        ctx.fill();
+      });
+    }
+
+    // ── Sun (morning / noon / afternoon) ─────────────────────────────────────
+    if (['morning','noon','afternoon'].includes(cfg.phase)) {
+      const sx = W * 0.78;
+      const sy = cfg.phase === 'noon' ? H * 0.12 : H * 0.2;
+      // Sun rays shimmer
+      const rayCount = 12;
+      for (let i = 0; i < rayCount; i++) {
+        const angle = (i / rayCount) * Math.PI * 2 + t * 0.3;
+        const len = 55 + Math.sin(t * 1.5 + i) * 8;
+        ctx.beginPath();
+        ctx.moveTo(sx + Math.cos(angle) * 28, sy + Math.sin(angle) * 28);
+        ctx.lineTo(sx + Math.cos(angle) * len, sy + Math.sin(angle) * len);
+        ctx.strokeStyle = 'rgba(255,235,100,0.25)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+      // Sun glow
+      const sunGrad = ctx.createRadialGradient(sx, sy, 0, sx, sy, 120);
+      sunGrad.addColorStop(0, 'rgba(255,245,180,0.35)');
+      sunGrad.addColorStop(1, 'transparent');
+      ctx.fillStyle = sunGrad;
+      ctx.fillRect(0, 0, W, H);
+      // Sun disc
+      ctx.beginPath();
+      ctx.arc(sx, sy, 28, 0, Math.PI * 2);
+      ctx.fillStyle = cfg.phase === 'noon' ? '#fff9c4' : '#ffe082';
+      ctx.fill();
+    }
+
+    // ── Sunrise / sunset orb ─────────────────────────────────────────────────
+    if (['sunrise','sunset','predawn'].includes(cfg.phase)) {
+      const sx = W * 0.5, sy = H * 0.98;
+      const r = W * 0.28;
+      const sg = ctx.createRadialGradient(sx, sy, 0, sx, sy, r);
+      sg.addColorStop(0, 'rgba(255,200,80,0.55)');
+      sg.addColorStop(0.4, 'rgba(255,100,30,0.3)');
+      sg.addColorStop(1, 'transparent');
+      ctx.fillStyle = sg;
+      ctx.fillRect(0, 0, W, H);
+    }
+
+    // ── Clouds (day phases) ───────────────────────────────────────────────────
+    if (['morning','noon','afternoon','sunrise'].includes(cfg.phase)) {
+      drawCloud(ctx, ((t * 12) % (W + 300)) - 150, H * 0.25, 1.0, 0.12);
+      drawCloud(ctx, ((t * 7 + W * 0.4) % (W + 300)) - 150, H * 0.35, 0.7, 0.09);
+      drawCloud(ctx, ((t * 9 + W * 0.65) % (W + 300)) - 150, H * 0.18, 0.55, 0.08);
+    }
+  }
+
+  function drawCloud(ctx, x, y, scale, alpha) {
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = 'white';
+    [[0,0,50],[45,-10,38],[90,5,45],[130,0,35],[-30,8,30]].forEach(([dx,dy,r]) => {
+      ctx.beginPath();
+      ctx.arc(x + dx * scale, y + dy * scale, r * scale, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    ctx.restore();
+  }
+
+  // ── Sky-phase: apply class + nav tint ─────────────────────────────────────
+  const SKY_PHASES = ['sky-night','sky-dawn','sky-sunrise','sky-morning','sky-noon','sky-afternoon','sky-sunset','sky-dusk'];
+  const NAV_TINTS = {
+    'sky-night':    'rgba(30,60,140,0.14)',
+    'sky-dawn':     'rgba(180,60,30,0.16)',
+    'sky-sunrise':  'rgba(220,110,30,0.18)',
+    'sky-morning':  'rgba(30,140,220,0.10)',
+    'sky-noon':     'rgba(20,120,220,0.08)',
+    'sky-afternoon':'rgba(20,100,200,0.10)',
+    'sky-sunset':   'rgba(210,90,20,0.18)',
+    'sky-dusk':     'rgba(130,20,190,0.18)',
+  };
+
+  function getSkyPhase(hour) {
+    if (hour >= 0  && hour < 5)  return 'sky-night';
+    if (hour >= 5  && hour < 6)  return 'sky-dawn';
+    if (hour >= 6  && hour < 8)  return 'sky-sunrise';
+    if (hour >= 8  && hour < 11) return 'sky-morning';
+    if (hour >= 11 && hour < 15) return 'sky-noon';
+    if (hour >= 15 && hour < 17) return 'sky-afternoon';
+    if (hour >= 17 && hour < 19) return 'sky-sunset';
+    return 'sky-dusk';
+  }
+
+  function applySkyPhase() {
+    if (currentMode !== 'earth') return;
+    const phase = getSkyPhase(new Date().getHours());
+    // Remove old phase classes
+    SKY_PHASES.forEach(p => document.body.classList.remove(p));
+    document.body.classList.add(phase);
+    // Update nav tint CSS variable
+    const nav = document.querySelector('nav');
+    if (nav) nav.style.setProperty('--sky-tint', NAV_TINTS[phase] || 'transparent');
+  }
+
+  // ── Theme switcher ──────────────────────────────────────────────────────────
+  function setTheme(mode) {
+    currentMode = mode;
+    document.body.classList.remove('light', 'dark', 'earth');
+    SKY_PHASES.forEach(p => document.body.classList.remove(p));
+    document.body.classList.add(mode);
+    sun.classList.toggle('active',   mode === 'light');
+    moon.classList.toggle('active',  mode === 'dark');
+    earth.classList.toggle('active', mode === 'earth');
+
+    if (mode === 'earth') {
+      canvas.style.opacity = '1';
+      skyActive = true;
+      applySkyPhase();
+      if (!rafId) drawSky();
+    } else {
+      canvas.style.opacity = '0';
+      skyActive = false;
+      // Clear nav tint
+      const nav = document.querySelector('nav');
+      if (nav) nav.style.removeProperty('--sky-tint');
+      if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+    }
+  }
+
+  sun.onclick   = () => setTheme('light');
+  moon.onclick  = () => setTheme('dark');
+  earth.onclick = () => setTheme('earth');
+
+  // Update sky phase every minute
+  setInterval(applySkyPhase, 60000);
+
+  // Default: earth mode
+  setTheme('earth');
+})();
+</script>
+
+
+
+<!-- THREE.JS + ASTRONAUT -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script>
+(function () {
+  const container = document.getElementById('webgl-container');
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+  camera.position.set(0, 0, 6);
+
+  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+  renderer.setSize(container.clientWidth, container.clientHeight);
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setClearColor(0x000000, 0);
+  container.appendChild(renderer.domElement);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.9));
+  const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
+  dirLight.position.set(5, 3, 5);
+  scene.add(dirLight);
+
+  let astronaut = null;
+  // FIX #11: Track mouse only once, not inside updateSky
+  let mouseX = 0, mouseY = 0;
+  window.addEventListener('mousemove', e => {
+    mouseX = (e.clientX / window.innerWidth - 0.5) * 0.3;
+    mouseY = (e.clientY / window.innerHeight - 0.5) * 0.3;
+  }, { passive: true });
+
+  const loader = new THREE.GLTFLoader();
+  loader.load('https://modelviewer.dev/shared-assets/models/Astronaut.glb', function (gltf) {
+    astronaut = gltf.scene;
+    astronaut.scale.set(0.8, 0.8, 0.8);
+    astronaut.position.set(1.2, -1.2, 0);
+    scene.add(astronaut);
+  });
+
+  // Glow ring
+  const glowMaterial = new THREE.MeshBasicMaterial({ color: 0x3b82f6, transparent: true, opacity: 0, side: THREE.DoubleSide });
+  const glowMesh = new THREE.Mesh(new THREE.RingGeometry(1.1, 1.5, 64), glowMaterial);
+  glowMesh.rotation.x = Math.PI / 2;
+  glowMesh.position.set(1.2, -1.6, 0);
+  scene.add(glowMesh);
+
+  // Raycaster for click on astronaut
+  const raycaster = new THREE.Raycaster();
+  const mouse = new THREE.Vector2();
+  renderer.domElement.addEventListener('click', e => {
+    if (!astronaut) return;
+    const rect = renderer.domElement.getBoundingClientRect();
+    mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+    raycaster.setFromCamera(mouse, camera);
+    if (raycaster.intersectObject(astronaut, true).length > 0) {
+      document.getElementById('askme').scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => {
+        if (window._askMeAI) window._askMeAI("Tell me about Hemanth's background and what makes him unique.");
+      }, 800);
+    }
+  });
+
+  function animate() {
+    requestAnimationFrame(animate);
+    if (astronaut) {
+      astronaut.rotation.y += 0.004;
+      // FIX #10: mouse rotation (single listener above, no duplicate)
+      astronaut.rotation.x += (mouseY - astronaut.rotation.x) * 0.05;
+      astronaut.position.y = -1.2 + Math.sin(Date.now() * 0.0015) * 0.1;
+    }
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    camera.aspect = container.clientWidth / container.clientHeight;
+    camera.updateProjectionMatrix();
+  });
+
+  // Expose for bubble controls
+  window._astronautScene = { astronaut, glowMaterial };
+
+  // FIX #4/#7: Sky theme via CSS vars only, not body.style.background
+  // FIX #10: Mouse listener moved OUT of updateSky
+  function updateSkyFilter() {
+    if (!container) return;
+    const hour = new Date().getHours();
+    if (hour >= 19 || hour < 5) {
+      container.style.filter = 'drop-shadow(0 0 25px rgba(200,220,255,0.5))';
+    } else {
+      container.style.filter = 'drop-shadow(0 0 25px rgba(255,200,100,0.4))';
+    }
+  }
+  updateSkyFilter();
+  setInterval(updateSkyFilter, 60000);
+})();
+</script>
+
+<!-- ASTRONAUT BUBBLE CONTROLLER -->
+<!-- FIX #7: Single unified bubble controller. Removed duplicate inline handlers. -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+// Handle left-side suggestion clicks
+const suggestionButtons = document.querySelectorAll(".askme-suggestion");
+
+suggestionButtons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    const question = btn.getAttribute("data-q");
+    if (!question) return;
+
+    // Smooth scroll
+    document.getElementById("askme").scrollIntoView({ behavior: "smooth" });
+
+    // Visual feedback
+    btn.blur();
+    btn.style.opacity = "0.6";
+
+    setTimeout(() => {
+      btn.style.opacity = "1";
+      window._askMeAI(question);
+    }, 400);
+  });
+});
+  const form = document.querySelector(".askme-form");
+  const input = document.querySelector(".askme-input");
+  const thread = document.querySelector(".askme-thread");
+  const empty = document.getElementById("askmeEmpty");
+const bubble = document.getElementById("astronaut-bubble");
+const closeBtn = bubble.querySelector(".close-btn");
+closeBtn.addEventListener("click", () => {
+  bubble.classList.remove("active");
+});
+const exploreBtn = document.getElementById("explore-btn");
+const knowBtn = document.getElementById("know-btn");
+exploreBtn.addEventListener("click", () => {
+  bubble.classList.remove("active");
+});
+knowBtn.addEventListener("click", () => {
+  bubble.classList.remove("active");
+
+  document.getElementById("askme").scrollIntoView({ behavior: "smooth" });
+
+  setTimeout(() => {
+    window._askMeAI("Give me a complete overview of Hemanth Chundur, what does he do, what are the projects he worked on ");
+  }, 800);
+});
+const expRole = document.getElementById("expRoleClick");
+
+expRole.addEventListener("click", () => {
+  bubble.querySelector(".bubble-title").innerText = "👨‍🚀 Curious about this phase?";
+  bubble.querySelector(".bubble-text").innerText =
+    "Tell me about hemanth chunduru";
+
+  bubble.classList.add("active");
+
+  knowBtn.onclick = () => {
+    bubble.classList.remove("active");
+
+    document.getElementById("askme").scrollIntoView({ behavior: "smooth" });
+
+    setTimeout(() => {
+      window._askMeAI("Tell me about hemanth chunduru");
+    }, 800);
+  };
+});
+window._askMeAI = async function(question) {
+  addMessage("user", question);
+  addMessage("assistant", "Thinking...");
+
+  const messages = document.querySelectorAll(".askme-msg");
+  const lastMessage = messages[messages.length - 1];
+
+  try {
+    const data = await askBackend(question);
+    lastMessage.querySelector(".askme-msg-body").innerText = data.answer;
+  } catch (error) {
+    lastMessage.querySelector(".askme-msg-body").innerText =
+      "AI service temporarily unavailable.";
+  }
+};
+// Show bubble on page load after slight delay
+setTimeout(() => {
+  bubble.classList.add("active");
+}, 1500);
+  if (!form) {
+    console.error("Form not found");
+    return;
+  }
+
+  function addMessage(role, text) {
+    if (empty) empty.style.display = "none";
+
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("askme-msg", role);
+
+    const roleLabel = document.createElement("div");
+    roleLabel.classList.add("askme-msg-role");
+    roleLabel.innerText = role === "user" ? "You" : "Hemanth AI";
+
+    const body = document.createElement("div");
+    body.classList.add("askme-msg-body");
+    body.innerText = text;
+
+    wrapper.appendChild(roleLabel);
+    wrapper.appendChild(body);
+    thread.appendChild(wrapper);
+
+    thread.scrollTop = thread.scrollHeight;
+  }
+
+  async function askBackend(question) {
+    const response = await fetch("http://127.0.0.1:8000/ask", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ question: question })
+    });
+
+    if (!response.ok) {
+      throw new Error("Backend failed");
+    }
+
+    return await response.json();
+  }
+form.addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const question = input.value.trim();
+  if (!question) return;
+
+  input.value = "";
+  window._askMeAI(question);
+});
+});
+</script>
+
+</body>
+</html>
