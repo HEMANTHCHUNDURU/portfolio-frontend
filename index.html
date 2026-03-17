@@ -1223,7 +1223,7 @@
         </div>
         <form class="askme-form">
           <textarea class="askme-input" id="askmeInput" placeholder="Ask anything about Hemanth... or paste a JD to check fit 🎯" rows="1"></textarea>
-          <button type="submit" class="askme-send" id="askmeSend">Ask →</button>
+          <button type="button" class="askme-send" id="askmeSend">Ask →</button>
         </form>
         <p class="askme-footer-note">Powered by OpenAI APIs · Built by Hemanth Chunduru — answers are based on his actual background and work.</p>
       </div>
@@ -2049,6 +2049,28 @@ form.addEventListener("submit", function (e) {
   input.value = "";
   input.style.height = "auto";
   window._askMeAI(question);
+});
+
+// Direct click handler on Ask button
+document.getElementById("askmeSend").addEventListener("click", function(e) {
+  e.preventDefault();
+  e.stopPropagation();
+  const question = input.value.trim();
+  if (!question) return;
+  input.value = "";
+  input.style.height = "auto";
+  window._askMeAI(question);
+});
+
+// Enter key
+input.addEventListener("keydown", function(e) {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    const question = input.value.trim();
+    if (!question) return;
+    input.value = "";
+    window._askMeAI(question);
+  }
 });
 
 // Also handle Enter key
