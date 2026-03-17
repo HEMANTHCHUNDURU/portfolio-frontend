@@ -1212,13 +1212,22 @@
     <div class="askme-inner">
       <div class="askme-left">
         <p class="askme-left-title">Have a question?<br/>Ask directly.</p>
-        <p class="askme-left-desc">This assistant knows Hemanth's background, projects, technical depth, and work history. Ask anything a recruiter or collaborator might want to know.</p>
-        <div class="askme-suggestions">
-          <button class="askme-suggestion" data-q="What are the projects worked till now">Want to know more about the projects he's worked on?</button>
-          <button class="askme-suggestion" data-q="What kind of RAG systems has Hemanth built?">What RAG systems has he built?</button>
-          <button class="askme-suggestion" data-q="How did Hemanth transition from Product Analyst to AI Engineer?">How did he transition to AI engineering?</button>
-          <button class="askme-suggestion" data-q="What is Hemanth currently focused on?">What is he currently focused on?</button>
-          <button class="askme-suggestion" data-q="What makes Hemanth a strong candidate for an AI engineering role?">Why hire him for an AI role?</button>
+        <p class="askme-left-desc">
+          This AI knows everything about Hemanth — his projects, 
+          transition story, tech stack, and work history.
+        </p>
+        <div class="askme-suggestions" style="margin-top:1rem;">
+          <button class="askme-suggestion" data-q="Tell me about all the AI projects Hemanth has built including the RAG system and sentiment analyzer">
+            → What AI projects has he built?
+          </button>
+          <button class="askme-suggestion" data-q="What are Hemanth's technical skills in AI, Python, LangChain, RAG and FastAPI?">
+            → What is his tech stack and experience?
+          </button>
+          <button class="askme-suggestion" data-q="Why should I hire Hemanth for an AI engineering role? What makes him unique compared to other candidates?">
+            → Why should I hire him for an AI role?
+          </button>
+
+
         </div>
       </div>
       <div class="askme-right">
@@ -1228,10 +1237,10 @@
           </div>
         </div>
         <form class="askme-form">
-          <textarea class="askme-input" id="askmeInput" placeholder="Ask anything about Hemanth..." rows="1"></textarea>
-          <button type = "submit" class="askme-send" id="askmeSend">Ask →</button>
+          <textarea class="askme-input" id="askmeInput" placeholder="Ask anything about Hemanth... or paste a JD to check fit 🎯" rows="1"></textarea>
+          <button type="submit" class="askme-send" id="askmeSend">Ask →</button>
         </form>
-        <p class="askme-footer-note">Powered by OpenAI APIs Built by Hemanth Chunduru — answers are based on Hemanth's actual background and work.</p>
+        <p class="askme-footer-note">Powered by OpenAI APIs · Built by Hemanth Chunduru — answers are based on his actual background and work.</p>
       </div>
     </div>
   </div>
@@ -1963,7 +1972,7 @@ knowBtn.addEventListener("click", () => {
   document.getElementById("askme").scrollIntoView({ behavior: "smooth" });
 
   setTimeout(() => {
-    window._askMeAI("Give me a complete overview of Hemanth Chundur, what does he do, what are the projects he worked on ");
+    window._askMeAI("Give me a complete overview of Hemanth Chunduru, what does he do, what are the projects he worked on ");
   }, 800);
 });
 const expRole = document.getElementById("expRoleClick");
@@ -2031,7 +2040,7 @@ setTimeout(() => {
   }
 
   async function askBackend(question) {
-    const response = await fetch('https://portfolio-backend-production-b664.up.railway.app/ask', {
+    const response = await fetch('http://localhost:8000/ask', {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
