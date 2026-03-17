@@ -2041,12 +2041,25 @@ setTimeout(() => {
   }
 form.addEventListener("submit", function (e) {
   e.preventDefault();
+  e.stopPropagation();
 
   const question = input.value.trim();
   if (!question) return;
 
   input.value = "";
+  input.style.height = "auto";
   window._askMeAI(question);
+});
+
+// Also handle Enter key
+input.addEventListener("keydown", function(e) {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    const question = input.value.trim();
+    if (!question) return;
+    input.value = "";
+    window._askMeAI(question);
+  }
 });
 });
 </script>
