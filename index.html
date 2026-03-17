@@ -820,18 +820,16 @@
 <script>
 (function() {
   const countEl = document.getElementById('visitor-count');
-
-  // Using CountAPI - free, no signup, persists forever
-  fetch('https://api.countapi.xyz/hit/hemanthchunduru.com/visits')
-    .then(res => res.json())
-    .then(data => {
-      // Format number nicely: 1000 → 1,000
-      countEl.textContent = data.value.toLocaleString();
-    })
-    .catch(() => {
-      // Silently fail — don't show broken counter
+ fetch('https://hits.seeyoufarmer.com/hit/hemanthchunduru.com')
+  .then(res => res.json())
+  .then(data => {
+    if (countEl) countEl.textContent = data.value.toLocaleString();
+  })
+  .catch(() => {
+    if (countEl && countEl.parentElement) {
       countEl.parentElement.style.display = 'none';
-    });
+    }
+  });
 })();
 </script>
 
