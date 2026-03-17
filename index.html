@@ -910,8 +910,8 @@
       </p>
       <div class="hero-ctas">
         <a href="#work" class="btn-primary">View Work <span>↓</span></a>
-        <a href="resume.pdf" target="_blank" rel="noopener" class="btn-secondary">Download Resume ↗</a>
-        <a href="https://github.com/CHUNDURUHEMANTH" target="_blank" rel="noopener" class="btn-secondary">GitHub ↗</a>
+        <a href="Hemanth_Chunduru_AI_Engineer.pdf" target="_blank" rel="noopener" class="btn-secondary">Download Resume ↗</a>
+        <a href="https://www.linkedin.com/in/hemanth-chunduru-4560bb194/" target="_blank" rel="noopener" class="btn-secondary">LinkedIn ↗</a>
       </div>
     </div>
   </div>
@@ -1238,59 +1238,205 @@
 </section>
 
 <!-- CONTACT -->
+<!-- CONTACT -->
 <section id="contact">
   <div class="site">
     <div class="section-header">
       <span class="section-label">Contact</span>
     </div>
     <div class="contact-grid">
-      <div><p class="contact-label">Get in touch</p></div>
-      <div class="contact-links">
-        <!-- FIX #15: mailto now matches display value -->
-        <a class="contact-link" href="mailto:chunduruhemanth2002@gmail.com">
-          <div class="contact-link-left">
-            <span class="contact-platform">Email</span>
-            <span class="contact-value">chunduruhemanth2002@gmail.com</span>
+      <div>
+        <p class="contact-label">Get in touch</p>
+        <p style="font-size:0.85rem; color:var(--subtle); font-weight:300; line-height:1.7; margin-top:1rem;">
+          Open to AI engineering roles, collaborations, and interesting problems. Fill out the form and I'll get back to you.
+        </p>
+        <div style="margin-top:2rem; display:flex; flex-direction:column; gap:0.75rem;">
+          <a href="mailto:chunduruhemanth2002@gmail.com" style="font-family:var(--font-mono); font-size:0.7rem; color:var(--muted); display:flex; align-items:center; gap:0.5rem;">
+            <span style="color:var(--border-hover)">→</span> chunduruhemanth2002@gmail.com
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <!-- SUCCESS STATE -->
+        <div id="contact-success" style="display:none; border:1px solid var(--border); border-radius:2px; padding:3rem 2rem; text-align:center;">
+          <div style="font-size:2rem; margin-bottom:1rem;">✅</div>
+          <p style="font-size:1.1rem; font-weight:300; color:var(--heading); margin-bottom:0.5rem;">Message sent!</p>
+          <p style="font-family:var(--font-mono); font-size:0.7rem; color:var(--muted);">Thanks for reaching out. I'll get back to you soon.</p>
+          <button onclick="resetContactForm()" style="margin-top:1.5rem; background:none; border:1px solid var(--border); color:var(--subtle); font-family:var(--font-mono); font-size:0.65rem; padding:0.5rem 1rem; border-radius:2px; cursor:pointer;">
+            Send another →
+          </button>
+        </div>
+
+        <!-- FORM STATE -->
+        <form id="contact-form" action="https://formspree.io/f/meerplep" method="POST" style="display:flex; flex-direction:column; gap:1.25rem;">
+
+          <!-- Name + Email row -->
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+            <div style="display:flex; flex-direction:column; gap:0.4rem;">
+              <label style="font-family:var(--font-mono); font-size:0.65rem; color:var(--muted); letter-spacing:0.08em; text-transform:uppercase;">Your Name</label>
+              <input
+                type="text"
+                name="name"
+                required
+                placeholder="John Smith"
+                style="background:var(--surface); border:1px solid var(--border); border-radius:2px; color:var(--heading); font-family:var(--font-sans); font-size:0.9rem; font-weight:300; padding:0.75rem 1rem; outline:none; transition:border-color 0.25s; width:100%;"
+                onfocus="this.style.borderColor='var(--border-hover)'"
+                onblur="this.style.borderColor='var(--border)'"
+              />
+            </div>
+            <div style="display:flex; flex-direction:column; gap:0.4rem;">
+              <label style="font-family:var(--font-mono); font-size:0.65rem; color:var(--muted); letter-spacing:0.08em; text-transform:uppercase;">Your Email</label>
+              <input
+                type="email"
+                name="email"
+                required
+                placeholder="john@company.com"
+                style="background:var(--surface); border:1px solid var(--border); border-radius:2px; color:var(--heading); font-family:var(--font-sans); font-size:0.9rem; font-weight:300; padding:0.75rem 1rem; outline:none; transition:border-color 0.25s; width:100%;"
+                onfocus="this.style.borderColor='var(--border-hover)'"
+                onblur="this.style.borderColor='var(--border)'"
+              />
+            </div>
           </div>
-          <span class="contact-arrow">↗</span>
-        </a>
-        <a class="contact-link" href="https://linkedin.com/in/hemanth-chunduru-4560bb194" target="_blank" rel="noopener">
-          <div class="contact-link-left">
-            <span class="contact-platform">LinkedIn</span>
-            <span class="contact-value">linkedin.com/in/hemanth-chunduru-4560bb194</span>
+
+          <!-- Reason for contact -->
+          <div style="display:flex; flex-direction:column; gap:0.4rem;">
+            <label style="font-family:var(--font-mono); font-size:0.65rem; color:var(--muted); letter-spacing:0.08em; text-transform:uppercase;">Why are you reaching out?</label>
+            <select
+              name="reason"
+              required
+              style="background:var(--surface); border:1px solid var(--border); border-radius:2px; color:var(--heading); font-family:var(--font-sans); font-size:0.9rem; font-weight:300; padding:0.75rem 1rem; outline:none; transition:border-color 0.25s; width:100%; cursor:pointer; appearance:none;"
+              onfocus="this.style.borderColor='var(--border-hover)'"
+              onblur="this.style.borderColor='var(--border)'"
+            >
+              <option value="" disabled selected style="color:var(--muted);">Select a reason...</option>
+              <option value="Job Opportunity">💼 Job Opportunity</option>
+              <option value="Freelance / Collaboration">🤝 Freelance / Collaboration</option>
+              <option value="Project Feedback">💬 Project Feedback</option>
+              <option value="Just saying hi">👋 Just saying hi</option>
+              <option value="Other">✳️ Other</option>
+            </select>
           </div>
-          <span class="contact-arrow">↗</span>
-        </a>
-        <a class="contact-link" href="https://github.com/CHUNDURUHEMANTH" target="_blank" rel="noopener">
-          <div class="contact-link-left">
-            <span class="contact-platform">GitHub</span>
-            <span class="contact-value">github.com/CHUNDURUHEMANTH</span>
+
+          <!-- Company (optional) -->
+          <div style="display:flex; flex-direction:column; gap:0.4rem;">
+            <label style="font-family:var(--font-mono); font-size:0.65rem; color:var(--muted); letter-spacing:0.08em; text-transform:uppercase;">Company / Organization <span style="opacity:0.4;">(optional)</span></label>
+            <input
+              type="text"
+              name="company"
+              placeholder="Google, Startup, Freelancer..."
+              style="background:var(--surface); border:1px solid var(--border); border-radius:2px; color:var(--heading); font-family:var(--font-sans); font-size:0.9rem; font-weight:300; padding:0.75rem 1rem; outline:none; transition:border-color 0.25s; width:100%;"
+              onfocus="this.style.borderColor='var(--border-hover)'"
+              onblur="this.style.borderColor='var(--border)'"
+            />
           </div>
-          <span class="contact-arrow">↗</span>
-        </a>
+
+          <!-- Message -->
+          <div style="display:flex; flex-direction:column; gap:0.4rem;">
+            <label style="font-family:var(--font-mono); font-size:0.65rem; color:var(--muted); letter-spacing:0.08em; text-transform:uppercase;">Message</label>
+            <textarea
+              name="message"
+              required
+              rows="5"
+              placeholder="Tell me more about what you're looking for..."
+              style="background:var(--surface); border:1px solid var(--border); border-radius:2px; color:var(--heading); font-family:var(--font-sans); font-size:0.9rem; font-weight:300; padding:0.75rem 1rem; outline:none; transition:border-color 0.25s; resize:vertical; width:100%; line-height:1.6;"
+              onfocus="this.style.borderColor='var(--border-hover)'"
+              onblur="this.style.borderColor='var(--border)'"
+            ></textarea>
+          </div>
+
+          <!-- Submit -->
+          <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
+            <p style="font-family:var(--font-mono); font-size:0.6rem; color:var(--muted);">
+              I typically respond within 24 hours.
+            </p>
+<button
+  type="submit"
+  id="contact-submit-btn"
+  class="askme-send"
+  style="padding:0.75rem 1.5rem;"
+>
+  Send Message →
+</button>
+          </div>
+
+        </form>
       </div>
     </div>
   </div>
 </section>
 
-<!-- FOOTER -->
+<!-- CONTACT FORM SCRIPT -->
+<script>
+(function() {
+  const form = document.getElementById('contact-form');
+  const success = document.getElementById('contact-success');
+  const submitBtn = document.getElementById('contact-submit-btn');
+
+  if (!form) return;
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    // Loading state
+    submitBtn.textContent = 'Sending...';
+    submitBtn.disabled = true;
+    submitBtn.style.opacity = '0.6';
+
+    try {
+      const response = await fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (response.ok) {
+        // Show success
+        form.style.display = 'none';
+        success.style.display = 'block';
+      } else {
+        throw new Error('Form failed');
+      }
+    } catch (err) {
+      submitBtn.textContent = 'Failed — try email directly';
+      submitBtn.disabled = false;
+      submitBtn.style.opacity = '1';
+      submitBtn.style.background = '#ef4444';
+    }
+  });
+})();
+
+function resetContactForm() {
+  const form = document.getElementById('contact-form');
+  const success = document.getElementById('contact-success');
+  const submitBtn = document.getElementById('contact-submit-btn');
+  form.reset();
+  form.style.display = 'flex';
+  success.style.display = 'none';
+  submitBtn.textContent = 'Send Message →';
+  submitBtn.disabled = false;
+  submitBtn.style.opacity = '1';
+}
+</script>
+
+
 <footer>
   <div class="site">
-    <div class="footer-inner">
+    <div class="footer-inner" style="flex-direction:column; align-items:center; gap:1.5rem; text-align:center;">
+
+      <!-- Built with info -->
+      <p style="font-family:var(--font-mono); font-size:0.65rem; color:var(--muted); line-height:1.8; letter-spacing:0.03em;">
+        Built with <span style="color:var(--subtle);">HTML · CSS · JavaScript · Three.js · FastAPI · LangChain · GPT-4o</span><br/>
+        Hosted on <span style="color:var(--subtle);">Netlify</span> · Backend on <span style="color:var(--subtle);">Railway</span> · Ask Me AI powered by <span style="color:var(--subtle);">OpenAI RAG</span>
+      </p>
+
+      <!-- Social links with SVG icons -->
+      <div style="display:flex; align-items:center; gap:1.5rem;">
+
+      </div>
+
       <span class="footer-copy">© 2026 Hemanth Chunduru</span>
 
-      <!-- VISITOR COUNTER -->
-      <div style="display:flex; align-items:center; gap:8px;">
-        <span style="font-family:var(--font-mono); font-size:0.65rem; color:var(--muted); letter-spacing:0.08em;">
-          👁 <span id="visitor-count">...</span> visits
-        </span>
-      </div>
-
-      <div class="footer-links">
-        <a href="https://github.com/CHUNDURUHEMANTH" target="_blank" rel="noopener">GitHub</a>
-        <a href="https://linkedin.com/in/hemanth-chunduru-4560bb194" target="_blank" rel="noopener">LinkedIn</a>
-        <a href="mailto:chunduruhemanth2002@gmail.com">Email</a>
-      </div>
     </div>
   </div>
 </footer>
