@@ -817,21 +817,6 @@
 </head>
 
 <!-- VISITOR COUNTER -->
-<script>
-(function() {
-  const countEl = document.getElementById('visitor-count');
- fetch('https://hits.seeyoufarmer.com/hit/hemanthchunduru.com')
-  .then(res => res.json())
-  .then(data => {
-    if (countEl) countEl.textContent = data.value.toLocaleString();
-  })
-  .catch(() => {
-    if (countEl && countEl.parentElement) {
-      countEl.parentElement.style.display = 'none';
-    }
-  });
-})();
-</script>
 
 
 <body>
@@ -2040,7 +2025,7 @@ setTimeout(() => {
   }
 
   async function askBackend(question) {
-    const response = await fetch('http://localhost:8000/ask', {
+    const response = await fetch("https://company-kb-rag-production.up.railway.app/ask", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
