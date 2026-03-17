@@ -661,6 +661,21 @@
   z-index: 9999;
   pointer-events: auto;
     }
+    #contact-form,
+#contact-success {
+  position: relative;
+  z-index: 1000;
+}
+#sky-canvas,
+#sky-canvas * {
+  pointer-events: none !important;
+  z-index: 0 !important;
+}
+
+section, form, button {
+  position: relative;
+  z-index: 10;
+}
     .askme-send:hover { background: #fff; }
     .askme-send:disabled { background: var(--border-hover); color: var(--muted); cursor: not-allowed; }
     .askme-footer-note { font-family: var(--font-mono); font-size: 0.6rem; color: var(--muted); margin-top: 0.75rem; letter-spacing: 0.04em; }
@@ -816,6 +831,13 @@
       .stack-item { min-width: 180px; padding: 1rem; }
       .footer-inner { flex-direction: column; align-items: flex-start; }
     }
+    #sky-canvas {
+  pointer-events: none !important;
+}
+
+#sky-canvas * {
+  pointer-events: none !important;
+}
   </style>
 </head>
 
