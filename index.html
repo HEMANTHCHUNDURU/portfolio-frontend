@@ -657,6 +657,9 @@
       border-radius: 2px; font-family: var(--font-mono); font-size: 0.7rem;
       font-weight: 400; padding: 0 1.25rem; cursor: pointer;
       transition: background 0.25s; white-space: nowrap; flex-shrink: 0;
+        position: relative;
+  z-index: 9999;
+  pointer-events: auto;
     }
     .askme-send:hover { background: #fff; }
     .askme-send:disabled { background: var(--border-hover); color: var(--muted); cursor: not-allowed; }
